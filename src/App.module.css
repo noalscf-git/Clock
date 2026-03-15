@@ -1,0 +1,85 @@
+/* src/App.module.css - исправленная версия */
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  transition: background 0.5s ease;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Полноэкранный режим для контейнера */
+:-webkit-full-screen .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent !important;
+  padding: 20px;
+  margin: 0;
+}
+
+:-moz-full-screen .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent !important;
+  padding: 20px;
+  margin: 0;
+}
+
+:fullscreen .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent !important;
+  padding: 20px;
+  margin: 0;
+}
+
+:fullscreen .topBar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+:fullscreen .settingsBtn,
+:fullscreen .fullscreenBtn {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+:fullscreen .topBar:hover .settingsBtn,
+:fullscreen .topBar:hover .fullscreenBtn {
+  opacity: 1;
+}
+
+/* Адаптация для маленького экрана */
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+}

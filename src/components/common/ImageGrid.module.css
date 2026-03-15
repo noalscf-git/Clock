@@ -1,0 +1,43 @@
+/* src/components/common/ImageGrid.module.css */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.imageItem {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.imageItem:hover {
+  transform: scale(1.05);
+  border-color: #667eea;
+}
+
+.imageItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageItem.active {
+  border-color: #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+}
+
+.empty {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 20px;
+}

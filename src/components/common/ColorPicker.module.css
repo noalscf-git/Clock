@@ -1,0 +1,59 @@
+/* src/components/common/ColorPicker.module.css */
+.colorPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+}
+
+.colorPreset {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.colorPreset:hover {
+  transform: scale(1.05);
+  border-color: white;
+}
+
+.colorPreset.active {
+  border-color: #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+}
+
+.customColor {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+}
+
+.customColor input {
+  width: 60px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.customColor input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.customColor input::-webkit-color-swatch {
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+}

@@ -1,0 +1,419 @@
+/* src/components/Settings/SettingsPanel.module.css */
+.settingsPanel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  background: rgba(20, 20, 40, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.settingsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settingsHeader h3 {
+  margin: 0;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.closeSettings {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.closeSettings:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(90deg);
+}
+
+.settingsContent {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(80vh - 80px);
+}
+
+.settingsTabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+
+.tabBtn {
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.tabBtn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tabBtn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.tabContent {
+  display: block;
+}
+
+/* Background tab */
+.backgroundSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.backgroundSettings h4 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.folderSelector {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.folderBtn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.folderBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.folderPath {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.folderImages {
+  margin-bottom: 30px;
+}
+
+.folderImages h5 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.presetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.presetItem {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.presetItem:hover {
+  transform: scale(1.05);
+}
+
+.presetPreview {
+  width: 100%;
+  height: 80px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.presetItem:hover .presetPreview {
+  border-color: #667eea;
+}
+
+.presetItem.active .presetPreview {
+  border-color: #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+}
+
+.presetItem span {
+  color: white;
+  font-size: 12px;
+}
+
+.gradient-1 { background: linear-gradient(135deg, #0b0b1f, #1a1a2f); }
+.gradient-2 { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+.gradient-3 { background: linear-gradient(135deg, #23074d, #cc5333); }
+.gradient-4 { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); }
+.gradient-5 { background: linear-gradient(135deg, #20002c, #cbb4d4); }
+.gradient-6 { background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b); }
+
+/* Clock tab */
+.clockSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.clockSettings h4 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.clockSize {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sizePresets {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sizePreset {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.sizePreset:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.sizePreset.active {
+  background: linear-gradient(135deg, #00b4db, #0083b0);
+  border-color: transparent;
+}
+
+/* Slideshow tab */
+.slideshowSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.settingItem select {
+  padding: 8px 12px;
+  background: rgba(30, 30, 50, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: white;
+  width: 180px;
+  cursor: pointer;
+  font-size: 14px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+.settingItem select:hover {
+  background: rgba(50, 50, 70, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.settingItem select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settingItem.checkbox {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.settingItem.checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.randomOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.randomOptions label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.randomOptions input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.randomOptions input[type="range"] {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  background: linear-gradient(90deg, #00b4db, #0083b0);
+  border-radius: 3px;
+  margin: 10px 0;
+}
+
+.randomOptions input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.randomIntervalControl {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  margin-top: 5px;
+}
+
+.randomIntervalControl span {
+  min-width: 80px;
+  text-align: center;
+}
+
+.hint {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  text-align: center;
+}
+
+.slideshowControls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.slideshowBtn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00b4db, #0083b0);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.slideshowBtn.stop {
+  background: linear-gradient(135deg, #f12711, #f5af19);
+}
+
+.slideshowBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 180, 219, 0.4);
+}
+
+.slideshowBtn.stop:hover:not(:disabled) {
+  box-shadow: 0 5px 15px rgba(241, 39, 17, 0.4);
+}
+
+.slideshowBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.currentStatus {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin-top: 10px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+@media (max-width: 600px) {
+  .settingItem select {
+    width: 120px;
+  }
+}

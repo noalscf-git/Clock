@@ -1,0 +1,109 @@
+/* src/index.css - исправленная версия */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Полноэкранный режим - точно как в оригинале */
+:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  background: inherit !important;
+}
+
+:-moz-full-screen {
+  width: 100vw;
+  height: 100vh;
+  background: inherit !important;
+}
+
+:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  background: inherit !important;
+}
+
+:-webkit-full-screen body {
+  width: 100%;
+  height: 100%;
+  background: inherit !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+:-moz-full-screen body {
+  width: 100%;
+  height: 100%;
+  background: inherit !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+:fullscreen body {
+  width: 100%;
+  height: 100%;
+  background: inherit !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+:-webkit-full-screen #root {
+  width: 100%;
+  height: 100%;
+  background: inherit !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:-moz-full-screen #root {
+  width: 100%;
+  height: 100%;
+  background: inherit !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:fullscreen #root {
+  width: 100%;
+  height: 100%;
+  background: inherit !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -474,3 +474,94 @@
     padding: 8px;
   }
 }
+
+
+.customGradients {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.customGradientItem {
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding: 5px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.customGradientItem:hover {
+  transform: scale(1.05);
+}
+
+.customGradientItem.active {
+  background: rgba(102, 126, 234, 0.3);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+.customGradientPreview {
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.customGradientItem span {
+  color: white;
+  font-size: 12px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deleteGradient {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 0, 0, 0.8);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.customGradientItem:hover .deleteGradient {
+  opacity: 1;
+}
+
+.deleteGradient:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: scale(1.1);
+}
+
+.createGradientBtn {
+  width: 100%;
+  padding: 15px;
+  margin: 20px 0;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.createGradientBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+}

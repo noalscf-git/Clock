@@ -1,8 +1,4 @@
-// src/utils/constants.ts
-
-import type { GradientKey } from "../types";
-
-
+// src/utils/constants.ts - добавляем цвета для палитры
 export const GRADIENTS: Record<GradientKey, string> = {
   gradient1: 'linear-gradient(135deg, #0b0b1f, #1a1a2f)',
   gradient2: 'linear-gradient(135deg, #1e3c72, #2a5298)',
@@ -11,6 +7,15 @@ export const GRADIENTS: Record<GradientKey, string> = {
   gradient5: 'linear-gradient(135deg, #20002c, #cbb4d4)',
   gradient6: 'linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b)'
 };
+
+export const COLOR_PALETTE = [
+  '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+  '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2',
+  '#F8C471', '#82E0AA', '#F1948A', '#AED6F1', '#D7BDE2',
+  '#F0B27A', '#7DCEA0', '#F5B7B1', '#E8DAEF', '#F9E79F',
+  '#A3E4D7', '#FAD7A0', '#A9CCE3', '#D2B4DE', '#E6B0AA',
+  '#B2BABB', '#F9E79F', '#A569BD', '#5DADE2', '#48C9B0'
+]; // Убраны дубликаты, добавлены новые цвета
 
 export const COLOR_PRESETS = [
   { color: '#00ffff', name: 'Голубой' },
@@ -28,6 +33,17 @@ export const SIZE_PRESETS = [
   { size: '6', label: 'Средний' },
   { size: '9', label: 'Большой' },
   { size: '12', label: 'Огромный' }
+];
+
+export const FONT_PRESETS = [
+  { value: 'Orbitron', label: 'Orbitron (киберпанк)' },
+  { value: 'Roboto', label: 'Roboto (классический)' },
+  { value: 'Arial', label: 'Arial (простой)' },
+  { value: 'Courier New', label: 'Courier New (печатная машинка)' },
+  { value: 'Times New Roman', label: 'Times New Roman (антиква)' },
+  { value: 'Verdana', label: 'Verdana (современный)' },
+  { value: 'Impact', label: 'Impact (жирный)' },
+  { value: 'Comic Sans MS', label: 'Comic Sans MS (неформальный)' }
 ];
 
 export const TRANSITION_EFFECTS = [
@@ -55,14 +71,3 @@ export const INTERVAL_OPTIONS = [
 ];
 
 export const EFFECTS = ['fade', 'slide', 'zoom', 'blur', 'flip', 'rotate', 'bounce', 'flash'];
-
-export const FONT_PRESETS = [
-  { value: 'Orbitron', label: 'Orbitron (киберпанк)' },
-  { value: 'Roboto', label: 'Roboto (классический)' },
-  { value: 'Arial', label: 'Arial (простой)' },
-  { value: 'Courier New', label: 'Courier New (печатная машинка)' },
-  { value: 'Times New Roman', label: 'Times New Roman (антиква)' },
-  { value: 'Verdana', label: 'Verdana (современный)' },
-  { value: 'Impact', label: 'Impact (жирный)' },
-  { value: 'Comic Sans MS', label: 'Comic Sans MS (неформальный)' }
-];

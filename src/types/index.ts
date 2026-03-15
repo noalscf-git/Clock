@@ -1,4 +1,4 @@
-// src/types/index.ts - обновляем типы
+// src/types/index.ts - добавляем новые типы
 export interface FolderImage {
   id: number;
   data: string;
@@ -6,9 +6,23 @@ export interface FolderImage {
   path?: string;
 }
 
+export interface GradientColor {
+  id: string;
+  color: string;
+  position: number; // 0-100
+}
+
+export interface CustomGradient {
+  id: string;
+  name: string;
+  colors: GradientColor[];
+  angle: number; // 0-360
+  type: 'linear' | 'radial';
+}
+
 export interface BackgroundState {
-  type: 'gradient' | 'folder';
-  value: string; // для градиента - ключ, для папки - id изображения
+  type: 'gradient' | 'folder' | 'custom';
+  value: string; // для градиента - ключ, для папки - id изображения, для custom - id градиента
 }
 
 export interface ClockSettings {

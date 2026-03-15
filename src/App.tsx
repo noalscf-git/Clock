@@ -1,4 +1,4 @@
-// src/App.tsx - обновленная версия с раздельным хранением
+// src/App.tsx - исправляем выбор изображения
 import React, { useRef, useState, useEffect } from 'react';
 import { ClockDisplay } from './components/Clock/ClockDisplay';
 import { TopBar } from './components/UI/TopBar';
@@ -8,8 +8,9 @@ import { useFullscreen } from './hooks/useFullscreen';
 import { useClock } from './hooks/useClock';
 import { useSlideshow } from './hooks/useSlideshow';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useGradientEditor } from './hooks/useGradientEditor';
 import { GRADIENTS } from './utils/constants';
-import type { FolderImage, GradientKey } from './types';
+import type { FolderImage, GradientKey, CustomGradient } from './types';
 import styles from './App.module.css';
 
 function App() {
@@ -24,11 +25,14 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState('background');
   
-  // Background state - храним только тип и ключ/id
-  const [backgroundType, setBackgroundType] = useLocalStorage<'gradient' | 'folder'>('backgroundType', 'gradient');
+  // Background state
+  const [backgroundType, setBackgroundType] = useLocalStorage<'gradient' | 'folder' | 'custom'>('backgroundType', 'gradient');
   const [backgroundValue, setBackgroundValue] = useLocalStorage<string>('backgroundValue', 'gradient1');
   
-  // Folder images - храним сами изображения только в памяти, в localStorage только метаданные
+  // Custom gradients
+  const { customGradients, getGradientStyle } = useGradientEditor();
+  
+  // Folder images
   const [folderImages, setFolderImages] = useState<FolderImage[]>([]);
   const [folderPath, setFolderPath] = useState('');
 
@@ -36,8 +40,14 @@ function App() {
   const [currentBackground, setCurrentBackground] = useState<string>(() => {
     if (backgroundType === 'gradient') {
       return GRADIENTS[backgroundValue as GradientKey];
+    } else if (backgroundType === 'custom') {
+      const gradient = customGradients.find(g => g.id === backgroundValue);
+      return gradient ? getGradientStyle(gradient) : GRADIENTS.gradient1;
+    } else if (backgroundType === 'folder') {
+      // Для папки возвращаем пустую строку, потом обновим через useEffect
+      return '';
     }
-    return '';
+    return GRADIENTS.gradient1;
   });
 
   // Загрузка сохраненных метаданных изображений
@@ -46,7 +56,6 @@ function App() {
     if (savedMetadata) {
       try {
         const metadata = JSON.parse(savedMetadata);
-        // Создаем заглушки для изображений, данные загрузим позже
         setFolderImages(metadata.map((item: any) => ({
           id: item.id,
           name: item.name,
@@ -59,26 +68,34 @@ function App() {
     }
   }, []);
 
-  // Обновление текущего фона при изменении типа или значения
+  // Обновление текущего фона
   useEffect(() => {
     if (backgroundType === 'gradient') {
       setCurrentBackground(GRADIENTS[backgroundValue as GradientKey]);
-    } else if (backgroundType === 'folder' && folderImages.length > 0) {
+    } else if (backgroundType === 'custom') {
+      const gradient = customGradients.find(g => g.id === backgroundValue);
+      setCurrentBackground(gradient ? getGradientStyle(gradient) : GRADIENTS.gradient1);
+    } else if (backgroundType === 'folder') {
+      // Ищем изображение по ID (backgroundValue хранит ID)
       const image = folderImages.find(img => img.id.toString() === backgroundValue);
       if (image?.data) {
         setCurrentBackground(image.data);
+      } else if (folderImages.length > 0 && !backgroundValue) {
+        // Если нет выбранного изображения, но есть изображения в папке
+        setBackgroundValue(folderImages[0].id.toString());
+        setCurrentBackground(folderImages[0].data);
       }
     }
-  }, [backgroundType, backgroundValue, folderImages]);
+  }, [backgroundType, backgroundValue, folderImages, customGradients, getGradientStyle]);
 
   // Slideshow
   const slideshow = useSlideshow(
-    folderImages.filter(img => img.data), // Только изображения с загруженными данными
+    folderImages.filter(img => img.data), // Только изображения с данными
     (imageData: string) => {
       const image = folderImages.find(img => img.data === imageData);
       if (image) {
         setBackgroundType('folder');
-        setBackgroundValue(image.id.toString());
+        setBackgroundValue(image.id.toString()); // Сохраняем ID, а не data URL
       }
     }
   );
@@ -108,9 +125,18 @@ function App() {
 
           loadedCount++;
           if (loadedCount === files.length) {
+            // Сортируем изображения по имени
+            newImages.sort((a, b) => a.name.localeCompare(b.name));
             setFolderImages(newImages);
             
-            // Сохраняем только метаданные
+            // Автоматически выбираем первое изображение
+            if (newImages.length > 0) {
+              setBackgroundType('folder');
+              setBackgroundValue(newImages[0].id.toString());
+              setCurrentBackground(newImages[0].data);
+            }
+            
+            // Сохраняем метаданные
             const metadata = newImages.map(img => ({
               id: img.id,
               name: img.name,
@@ -131,24 +157,28 @@ function App() {
     slideshow.stopSlideshow();
   };
 
-  // Select folder image
-  const handleImageSelect = (image: FolderImage) => {
-    setBackgroundType('folder');
-    setBackgroundValue(image.id.toString());
+  // Select custom gradient
+  const handleCustomGradientSelect = (gradient: CustomGradient) => {
+    setBackgroundType('custom');
+    setBackgroundValue(gradient.id);
     slideshow.stopSlideshow();
+  };
+
+  // Select folder image - ИСПРАВЛЕНО!
+  const handleImageSelect = (image: FolderImage) => {
+    if (image?.data) {
+      setBackgroundType('folder');
+      setBackgroundValue(image.id.toString()); // Сохраняем ID
+      setCurrentBackground(image.data); // Сразу устанавливаем фон
+      slideshow.stopSlideshow();
+    } else {
+      console.warn('Selected image has no data:', image);
+    }
   };
 
   // Get background style
   const getBackgroundStyle = (): React.CSSProperties => {
-    if (backgroundType === 'gradient') {
-      return { 
-        backgroundImage: currentBackground,
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      };
-    } else if (backgroundType === 'folder' && currentBackground) {
+    if (backgroundType === 'folder' && currentBackground) {
       return { 
         backgroundImage: `url('${currentBackground}')`,
         backgroundAttachment: 'fixed',
@@ -156,7 +186,25 @@ function App() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
       };
+    } else if (backgroundType === 'gradient' && currentBackground) {
+      return { 
+        backgroundImage: currentBackground,
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      };
+    } else if (backgroundType === 'custom' && currentBackground) {
+      return { 
+        backgroundImage: currentBackground,
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      };
     }
+    
+    // По умолчанию
     return { 
       backgroundImage: GRADIENTS.gradient1,
       backgroundAttachment: 'fixed',
@@ -191,6 +239,7 @@ function App() {
           folderImages={folderImages}
           folderPath={folderPath}
           onGradientSelect={handleGradientSelect}
+          onCustomGradientSelect={handleCustomGradientSelect}
           onFolderSelect={handleFolderSelect}
           onImageSelect={handleImageSelect}
           

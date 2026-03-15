@@ -1,0 +1,264 @@
+/* src/components/Settings/GradientEditor.module.css */
+.editor {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.header {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.nameInput {
+  flex: 1;
+  padding: 10px 15px;
+  background: rgba(30, 30, 50, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+}
+
+.nameInput:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.saveBtn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #00b4db, #0083b0);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.saveBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 180, 219, 0.4);
+}
+
+.preview {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.previewCanvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.controls {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+}
+
+.typeSelector {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.typeSelector label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.typeSelector input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.angleControl {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.angleControl label {
+  color: white;
+  font-size: 14px;
+}
+
+.angleSlider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  background: linear-gradient(90deg, #00b4db, #0083b0);
+  border-radius: 3px;
+}
+
+.angleSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.colorPoints {
+  margin-bottom: 20px;
+}
+
+.colorPoints h4 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.pointsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.colorPoint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.colorInput {
+  width: 50px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.colorInput::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.positionControl {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.positionControl span {
+  color: white;
+  font-size: 12px;
+  min-width: 40px;
+}
+
+.positionSlider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.positionSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.removeBtn {
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  border-radius: 6px;
+  color: #ff6b6b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.removeBtn:hover {
+  background: rgba(255, 0, 0, 0.3);
+  transform: scale(1.1);
+}
+
+.addBtn {
+  width: 100%;
+  padding: 10px;
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px dashed #667eea;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addBtn:hover {
+  background: rgba(102, 126, 234, 0.3);
+}
+
+.palette {
+  margin-top: 20px;
+}
+
+.palette h4 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+  gap: 8px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+}
+
+.paletteColor {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.paletteColor:hover {
+  transform: scale(1.2);
+  border-color: white;
+  box-shadow: 0 0 15px currentColor;
+}
+
+.savedGradients {
+  margin-top: 20px;
+}
+
+.savedGradients h4 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 14px;
+}

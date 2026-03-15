@@ -1,4 +1,4 @@
-/* src/components/common/ImageGrid.module.css */
+/* src/components/common/ImageGrid.module.css - добавляем стили для плейсхолдера */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -34,6 +34,32 @@
 .imageItem.active {
   border-color: #00ff00;
   box-shadow: 0 0 15px #00ff00;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  text-align: center;
+  padding: 5px;
+}
+
+.placeholder span:first-child {
+  font-size: 24px;
+}
+
+.imageName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .empty {

@@ -1,18 +1,19 @@
-// src/components/Settings/BackgroundTab.tsx
-import React, { useRef } from 'react';
+// src/components/Settings/BackgroundTab.tsx - убеждаемся что функция определена
+import React, { useRef, useState } from 'react';
 import { GRADIENTS } from '../../utils/constants';
 import { ImageGrid } from '../common/ImageGrid';
-
+import { GradientEditor } from './GradientEditor';
+import { useGradientEditor } from '../../hooks/useGradientEditor';
+import type { FolderImage, GradientKey, CustomGradient } from '../../types';
 import styles from './SettingsPanel.module.css';
-import type { FolderImage, GradientKey } from '../../types';
-
 
 interface BackgroundTabProps {
-  backgroundType: 'gradient' | 'folder';
+  backgroundType: 'gradient' | 'folder' | 'custom';
   currentBackground: string;
   folderImages: FolderImage[];
   folderPath: string;
   onGradientSelect: (gradient: GradientKey) => void;
+  onCustomGradientSelect: (gradient: CustomGradient) => void; // Обязательный проп
   onFolderSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onImageSelect: (image: FolderImage) => void;
 }
@@ -23,10 +24,38 @@ export const BackgroundTab: React.FC<BackgroundTabProps> = ({
   folderImages,
   folderPath,
   onGradientSelect,
+  onCustomGradientSelect,
   onFolderSelect,
   onImageSelect
 }) => {
   const folderInputRef = useRef<HTMLInputElement>(null);
+  const [showEditor, setShowEditor] = useState(false);
+  
+  const {
+    customGradients,
+    currentGradient,
+    addColorPoint,
+    removeColorPoint,
+    updateColor,
+    updatePosition,
+    updateAngle,
+    updateType,
+    updateName,
+    saveGradient,
+    loadGradient,
+    deleteGradient,
+    getGradientStyle
+  } = useGradientEditor();
+
+  const handleSaveGradient = () => {
+    const saved = saveGradient();
+    if (onCustomGradientSelect) { // Проверяем что функция существует
+      onCustomGradientSelect(saved);
+    } else {
+      console.error('onCustomGradientSelect is not defined');
+    }
+    setShowEditor(false);
+  };
 
   return (
     <div className={styles.tabContent}>
@@ -75,6 +104,55 @@ export const BackgroundTab: React.FC<BackgroundTabProps> = ({
             </div>
           ))}
         </div>
+
+        <h4>Свои градиенты</h4>
+        {customGradients.length > 0 && (
+          <div className={styles.customGradients}>
+            {customGradients.map(gradient => (
+              <div
+                key={gradient.id}
+                className={`${styles.customGradientItem} ${backgroundType === 'custom' && currentBackground === gradient.id ? styles.active : ''}`}
+                onClick={() => onCustomGradientSelect(gradient)}
+              >
+                <div 
+                  className={styles.customGradientPreview}
+                  style={{ background: getGradientStyle(gradient) }}
+                />
+                <span>{gradient.name}</span>
+                <button 
+                  className={styles.deleteGradient}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteGradient(gradient.id);
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button 
+          className={styles.createGradientBtn}
+          onClick={() => setShowEditor(!showEditor)}
+        >
+          {showEditor ? '✕ Закрыть редактор' : '🎨 Создать свой градиент'}
+        </button>
+
+        {showEditor && (
+          <GradientEditor
+            gradient={currentGradient}
+            onUpdateColor={updateColor}
+            onUpdatePosition={updatePosition}
+            onUpdateAngle={updateAngle}
+            onUpdateType={updateType}
+            onUpdateName={updateName}
+            onAddColor={addColorPoint}
+            onRemoveColor={removeColorPoint}
+            onSave={handleSaveGradient}
+          />
+        )}
       </div>
     </div>
   );

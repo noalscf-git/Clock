@@ -1,8 +1,7 @@
-// src/hooks/useSlideshow.ts
+// src/hooks/useSlideshow.ts - исправленная версия
 import { useState, useCallback, useRef, useEffect } from 'react';
-
-import { EFFECTS } from '../utils/constants';
 import type { FolderImage } from '../types';
+import { EFFECTS } from '../utils/constants';
 
 export const useSlideshow = (
   folderImages: FolderImage[],
@@ -18,6 +17,7 @@ export const useSlideshow = (
   
   const timerRef = useRef<NodeJS.Timeout>();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [effectClass, setEffectClass] = useState('');
 
   const stopSlideshow = useCallback(() => {
     if (timerRef.current) {
@@ -25,7 +25,27 @@ export const useSlideshow = (
       timerRef.current = undefined;
     }
     setIsActive(false);
+    setEffectClass('');
   }, []);
+
+  const showNextImage = useCallback((images: FolderImage[], index: number) => {
+    const currentEffect = randomEffect 
+      ? EFFECTS[Math.floor(Math.random() * EFFECTS.length)]
+      : effect;
+    
+    // Добавляем класс эффекта
+    setEffectClass(`${currentEffect}-bg`);
+    
+    // Меняем изображение через callback
+    setTimeout(() => {
+      onImageChange(images[index].data);
+      
+      // Убираем класс эффекта
+      setTimeout(() => {
+        setEffectClass('');
+      }, 500);
+    }, 50);
+  }, [randomEffect, effect, onImageChange]);
 
   const startSlideshow = useCallback(() => {
     if (folderImages.length === 0) {
@@ -43,22 +63,8 @@ export const useSlideshow = (
     setCurrentIndex(0);
     setIsActive(true);
 
-    const showNextImage = () => {
-      setCurrentIndex(prev => (prev + 1) % images.length);
-      
-      const currentEffect = randomEffect 
-        ? EFFECTS[Math.floor(Math.random() * EFFECTS.length)]
-        : effect;
-      
-      // Применяем эффект
-      document.body.classList.add(`${currentEffect}-bg`);
-      setTimeout(() => {
-        onImageChange(images[currentIndex].data);
-        setTimeout(() => {
-          document.body.classList.remove(`${currentEffect}-bg`);
-        }, 500);
-      }, 50);
-    };
+    // Показываем первое изображение
+    showNextImage(images, 0);
 
     const getIntervalMs = () => {
       if (randomInterval) {
@@ -70,15 +76,29 @@ export const useSlideshow = (
 
     const scheduleNext = () => {
       const intervalMs = getIntervalMs();
+      
       timerRef.current = setTimeout(() => {
-        showNextImage();
-        scheduleNext();
+        setCurrentIndex(prev => {
+          const nextIndex = (prev + 1) % images.length;
+          showNextImage(images, nextIndex);
+          return nextIndex;
+        });
+        
+        // Если включен случайный интервал, пересоздаем таймер с новым значением
+        if (randomInterval) {
+          scheduleNext();
+        } else {
+          timerRef.current = setTimeout(() => {
+            scheduleNext();
+          }, intervalMs);
+        }
       }, intervalMs);
     };
 
     scheduleNext();
-  }, [folderImages, shuffleImages, randomEffect, effect, randomInterval, randomIntervalRange, interval, onImageChange, stopSlideshow, currentIndex]);
+  }, [folderImages, shuffleImages, randomInterval, interval, randomEffect, effect, showNextImage, stopSlideshow]);
 
+  // Очистка при размонтировании
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -101,6 +121,7 @@ export const useSlideshow = (
     setRandomIntervalRange,
     shuffleImages,
     setShuffleImages,
+    effectClass,
     startSlideshow,
     stopSlideshow
   };

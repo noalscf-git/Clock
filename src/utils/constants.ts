@@ -55,3 +55,14 @@ export const INTERVAL_OPTIONS = [
 ];
 
 export const EFFECTS = ['fade', 'slide', 'zoom', 'blur', 'flip', 'rotate', 'bounce', 'flash'];
+
+export const FONT_PRESETS = [
+  { value: 'Orbitron', label: 'Orbitron (киберпанк)' },
+  { value: 'Roboto', label: 'Roboto (классический)' },
+  { value: 'Arial', label: 'Arial (простой)' },
+  { value: 'Courier New', label: 'Courier New (печатная машинка)' },
+  { value: 'Times New Roman', label: 'Times New Roman (антиква)' },
+  { value: 'Verdana', label: 'Verdana (современный)' },
+  { value: 'Impact', label: 'Impact (жирный)' },
+  { value: 'Comic Sans MS', label: 'Comic Sans MS (неформальный)' }
+];

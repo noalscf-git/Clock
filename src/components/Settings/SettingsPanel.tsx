@@ -1,27 +1,27 @@
 // src/components/Settings/SettingsPanel.tsx
-import React from 'react';
-import { TabButton } from '../common/TabButton';
-import { BackgroundTab } from './BackgroundTab';
-import { ClockTab } from './ClockTab';
-import { SlideshowTab } from './SlideshowTab';
-import type { FolderImage, GradientKey } from '../../types';
-import styles from './SettingsPanel.module.css';
+import React from "react";
+import { TabButton } from "../common/TabButton";
+import { BackgroundTab } from "./BackgroundTab";
+import { ClockTab } from "./ClockTab";
+import { SlideshowTab } from "./SlideshowTab";
+import type { FolderImage, GradientKey } from "../../types";
+import styles from "./SettingsPanel.module.css";
 
 interface SettingsPanelProps {
   isOpen: boolean;
   activeTab: string;
   onClose: () => void;
   onTabChange: (tab: string) => void;
-  
+
   // Background props
-  backgroundType: 'gradient' | 'folder';
+  backgroundType: "gradient" | "folder";
   currentBackground: string;
   folderImages: FolderImage[];
   folderPath: string;
   onGradientSelect: (gradient: GradientKey) => void;
   onFolderSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onImageSelect: (image: FolderImage) => void;
-  
+
   // Clock props
   clockSize: string;
   clockColor: string;
@@ -31,7 +31,7 @@ interface SettingsPanelProps {
   onClockColorChange: (color: string) => void;
   onGlowIntensityChange: (intensity: string) => void;
   onBorderOpacityChange: (opacity: string) => void;
-  
+
   // Slideshow props
   slideshowActive: boolean;
   slideshowEffect: string;
@@ -48,6 +48,9 @@ interface SettingsPanelProps {
   onShuffleImagesChange: (checked: boolean) => void;
   onStartSlideshow: () => void;
   onStopSlideshow: () => void;
+
+  fontFamily: string;
+  onFontFamilyChange: (font: string) => void;
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({
@@ -63,32 +66,34 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
     <div className={styles.settingsPanel}>
       <div className={styles.settingsHeader}>
         <h3>Настройки</h3>
-        <button className={styles.closeSettings} onClick={onClose}>✕</button>
+        <button className={styles.closeSettings} onClick={onClose}>
+          ✕
+        </button>
       </div>
-      
+
       <div className={styles.settingsContent}>
         <div className={styles.settingsTabs}>
           <TabButton
             label="Фон"
             icon="🖼️"
-            isActive={activeTab === 'background'}
-            onClick={() => onTabChange('background')}
+            isActive={activeTab === "background"}
+            onClick={() => onTabChange("background")}
           />
           <TabButton
             label="Часы"
             icon="⏰"
-            isActive={activeTab === 'clock'}
-            onClick={() => onTabChange('clock')}
+            isActive={activeTab === "clock"}
+            onClick={() => onTabChange("clock")}
           />
           <TabButton
             label="Слайд-шоу"
             icon="📸"
-            isActive={activeTab === 'slideshow'}
-            onClick={() => onTabChange('slideshow')}
+            isActive={activeTab === "slideshow"}
+            onClick={() => onTabChange("slideshow")}
           />
         </div>
-        
-        {activeTab === 'background' && (
+
+        {activeTab === "background" && (
           <BackgroundTab
             backgroundType={props.backgroundType}
             currentBackground={props.currentBackground}
@@ -99,21 +104,23 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onImageSelect={props.onImageSelect}
           />
         )}
-        
-        {activeTab === 'clock' && (
+
+        {activeTab === "clock" && (
           <ClockTab
             clockSize={props.clockSize}
             clockColor={props.clockColor}
             glowIntensity={props.glowIntensity}
             borderOpacity={props.borderOpacity}
+            fontFamily={props.fontFamily}
             onClockSizeChange={props.onClockSizeChange}
             onClockColorChange={props.onClockColorChange}
             onGlowIntensityChange={props.onGlowIntensityChange}
             onBorderOpacityChange={props.onBorderOpacityChange}
+            onFontFamilyChange={props.onFontFamilyChange}
           />
         )}
-        
-        {activeTab === 'slideshow' && (
+
+        {activeTab === "slideshow" && (
           <SlideshowTab
             isActive={props.slideshowActive}
             effect={props.slideshowEffect}

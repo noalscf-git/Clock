@@ -1,8 +1,8 @@
-// src/components/Settings/ClockTab.tsx
+// src/components/Settings/ClockTab.tsx - добавляем выбор шрифта
 import React from 'react';
 import { RangeSlider } from '../common/RangeSlider';
 import { ColorPicker } from '../common/ColorPicker';
-import { SIZE_PRESETS } from '../../utils/constants';
+import { SIZE_PRESETS, FONT_PRESETS } from '../../utils/constants';
 import styles from './SettingsPanel.module.css';
 
 interface ClockTabProps {
@@ -10,10 +10,12 @@ interface ClockTabProps {
   clockColor: string;
   glowIntensity: string;
   borderOpacity: string;
+  fontFamily: string; // новый пропс
   onClockSizeChange: (size: string) => void;
   onClockColorChange: (color: string) => void;
   onGlowIntensityChange: (intensity: string) => void;
   onBorderOpacityChange: (opacity: string) => void;
+  onFontFamilyChange: (font: string) => void; // новый пропс
 }
 
 export const ClockTab: React.FC<ClockTabProps> = ({
@@ -21,10 +23,12 @@ export const ClockTab: React.FC<ClockTabProps> = ({
   clockColor,
   glowIntensity,
   borderOpacity,
+  fontFamily,
   onClockSizeChange,
   onClockColorChange,
   onGlowIntensityChange,
-  onBorderOpacityChange
+  onBorderOpacityChange,
+  onFontFamilyChange
 }) => {
   return (
     <div className={styles.tabContent}>
@@ -50,6 +54,24 @@ export const ClockTab: React.FC<ClockTabProps> = ({
                 {preset.label}
               </button>
             ))}
+          </div>
+        </div>
+        
+        <h4>Шрифт цифр</h4>
+        <div className={styles.fontSelector}>
+          <select 
+            value={fontFamily} 
+            onChange={(e) => onFontFamilyChange(e.target.value)}
+            className={styles.fontSelect}
+          >
+            {FONT_PRESETS.map(font => (
+              <option key={font.value} value={font.value}>
+                {font.label}
+              </option>
+            ))}
+          </select>
+          <div className={styles.fontPreview} style={{ fontFamily: fontFamily }}>
+            Пример: 12:34:56
           </div>
         </div>
         

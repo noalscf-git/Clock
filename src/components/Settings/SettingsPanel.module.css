@@ -417,3 +417,60 @@
     width: 120px;
   }
 }
+
+
+.fontSelector {
+  margin-bottom: 25px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.fontSelect {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(30, 30, 50, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  margin-bottom: 10px;
+}
+
+.fontSelect:hover {
+  background: rgba(50, 50, 70, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.fontSelect option {
+  background: #1a1a2f;
+  color: white;
+  padding: 10px;
+}
+
+.fontPreview {
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  color: #00ffff;
+  font-size: 24px;
+  text-align: center;
+  letter-spacing: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-shadow: 0 0 10px currentColor;
+}
+
+@media (max-width: 600px) {
+  .fontPreview {
+    font-size: 18px;
+    padding: 8px;
+  }
+}

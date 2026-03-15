@@ -11,6 +11,7 @@ export interface ClockSettings {
   color: string;
   glowIntensity: string;
   borderOpacity: string;
+  fontFamily: string; // добавляем поле для шрифта
 }
 
 export interface SlideshowSettings {
@@ -31,3 +32,4 @@ export interface BackgroundSettings {
 }
 
 export type GradientKey = 'gradient1' | 'gradient2' | 'gradient3' | 'gradient4' | 'gradient5' | 'gradient6';
+

@@ -1,28 +1,38 @@
-// src/components/Settings/SettingsPanel.tsx - обновляем интерфейс
-import React from 'react';
-import { TabButton } from '../common/TabButton';
-import { BackgroundTab } from './BackgroundTab';
-import { ClockTab } from './ClockTab';
-import { SlideshowTab } from './SlideshowTab';
-import type { FolderImage, GradientKey, CustomGradient } from '../../types';
-import styles from './SettingsPanel.module.css';
+// src/components/Settings/SettingsPanel.tsx - обновляем, убираем Draggable логику
+import React from "react";
+import { TabButton } from "../common/TabButton";
+import { BackgroundTab } from "./BackgroundTab";
+import { ClockTab } from "./ClockTab";
+import { SlideshowTab } from "./SlideshowTab";
+import { AnimatedBackgroundTab } from "./AnimatedBackgroundTab";
+import type {
+  FolderImage,
+  GradientKey,
+  CustomGradient,
+  AnimatedBackground,
+} from "../../types";
+import styles from "./SettingsPanel.module.css";
 
 interface SettingsPanelProps {
   isOpen: boolean;
   activeTab: string;
   onClose: () => void;
   onTabChange: (tab: string) => void;
-  
+
   // Background props
-  backgroundType: 'gradient' | 'folder' | 'custom';
+  backgroundType: "gradient" | "folder" | "custom" | "animated";
   currentBackground: string;
   folderImages: FolderImage[];
   folderPath: string;
   onGradientSelect: (gradient: GradientKey) => void;
-  onCustomGradientSelect: (gradient: CustomGradient) => void; // Добавляем этот проп
+  onCustomGradientSelect: (gradient: CustomGradient) => void;
   onFolderSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onImageSelect: (image: FolderImage) => void;
-  
+
+  // Animated background props
+  animatedSettings?: AnimatedBackground;
+  onAnimatedSettingsChange?: (settings: AnimatedBackground) => void;
+  onAnimatedSelect?: () => void; // Добавляем проп для выбора анимации
   // Clock props
   clockSize: string;
   clockColor: string;
@@ -34,7 +44,7 @@ interface SettingsPanelProps {
   onGlowIntensityChange: (intensity: string) => void;
   onBorderOpacityChange: (opacity: string) => void;
   onFontFamilyChange: (font: string) => void;
-  
+
   // Slideshow props
   slideshowActive: boolean;
   slideshowEffect: string;
@@ -62,49 +72,58 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  const tabs = [
+    { id: "background", label: "Фон", icon: "🖼️" },
+    { id: "animated", label: "Анимация", icon: "✨" },
+    { id: "clock", label: "Часы", icon: "⏰" },
+    { id: "slideshow", label: "Слайд-шоу", icon: "📸" },
+  ];
+
   return (
     <div className={styles.settingsPanel}>
       <div className={styles.settingsHeader}>
         <h3>Настройки</h3>
-        <button className={styles.closeSettings} onClick={onClose}>✕</button>
+        <button className={styles.closeSettings} onClick={onClose}>
+          ✕
+        </button>
       </div>
-      
+
       <div className={styles.settingsContent}>
         <div className={styles.settingsTabs}>
-          <TabButton
-            label="Фон"
-            icon="🖼️"
-            isActive={activeTab === 'background'}
-            onClick={() => onTabChange('background')}
-          />
-          <TabButton
-            label="Часы"
-            icon="⏰"
-            isActive={activeTab === 'clock'}
-            onClick={() => onTabChange('clock')}
-          />
-          <TabButton
-            label="Слайд-шоу"
-            icon="📸"
-            isActive={activeTab === 'slideshow'}
-            onClick={() => onTabChange('slideshow')}
-          />
+          {tabs.map((tab) => (
+            <TabButton
+              key={tab.id}
+              label={tab.label}
+              icon={tab.icon}
+              isActive={activeTab === tab.id}
+              onClick={() => onTabChange(tab.id)}
+            />
+          ))}
         </div>
-        
-        {activeTab === 'background' && (
+
+        {activeTab === "background" && (
           <BackgroundTab
             backgroundType={props.backgroundType}
             currentBackground={props.currentBackground}
             folderImages={props.folderImages}
             folderPath={props.folderPath}
             onGradientSelect={props.onGradientSelect}
-            onCustomGradientSelect={props.onCustomGradientSelect} // Передаем проп дальше
+            onCustomGradientSelect={props.onCustomGradientSelect}
             onFolderSelect={props.onFolderSelect}
             onImageSelect={props.onImageSelect}
           />
         )}
-        
-        {activeTab === 'clock' && (
+
+        {activeTab === "animated" &&
+          props.animatedSettings &&
+          props.onAnimatedSettingsChange && (
+            <AnimatedBackgroundTab
+              settings={props.animatedSettings}
+              onSettingsChange={props.onAnimatedSettingsChange}
+              onSelect={props.onAnimatedSelect}
+            />
+          )}
+        {activeTab === "clock" && (
           <ClockTab
             clockSize={props.clockSize}
             clockColor={props.clockColor}
@@ -118,8 +137,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onFontFamilyChange={props.onFontFamilyChange}
           />
         )}
-        
-        {activeTab === 'slideshow' && (
+
+        {activeTab === "slideshow" && (
           <SlideshowTab
             isActive={props.slideshowActive}
             effect={props.slideshowEffect}

@@ -1,15 +1,17 @@
-// src/App.tsx - обновляем для отображения состояния восстановления
+// src/App.tsx - обновляем импорт и использование
 import React, { useRef, useState, useEffect } from 'react';
 import { ClockDisplay } from './components/Clock/ClockDisplay';
 import { TopBar } from './components/UI/TopBar';
 import { FullscreenHint } from './components/UI/FullscreenHint';
-import { SettingsPanel } from './components/Settings/SettingsPanel';
+import { SettingsPanel } from './components/Settings/SettingsPanel'; // Импортируем обычный SettingsPanel
+import { AnimatedBackground } from './components/Backgrounds/AnimatedBackground';
 import { useFullscreen } from './hooks/useFullscreen';
 import { useClock } from './hooks/useClock';
 import { useSlideshow } from './hooks/useSlideshow';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useGradientEditor } from './hooks/useGradientEditor';
 import { useImageStorage } from './hooks/useImageStorage';
+import { useAnimatedBackground } from './hooks/useAnimatedBackground';
 import { GRADIENTS } from './utils/constants';
 import type { GradientKey, CustomGradient } from './types';
 import styles from './App.module.css';
@@ -27,11 +29,17 @@ function App() {
   const [activeTab, setActiveTab] = useState('background');
   
   // Background state
-  const [backgroundType, setBackgroundType] = useLocalStorage<'gradient' | 'folder' | 'custom'>('backgroundType', 'gradient');
+  const [backgroundType, setBackgroundType] = useLocalStorage<'gradient' | 'folder' | 'custom' | 'animated'>(
+    'backgroundType', 
+    'gradient'
+  );
   const [backgroundValue, setBackgroundValue] = useLocalStorage<string>('backgroundValue', 'gradient1');
   
   // Custom gradients
   const { customGradients, getGradientStyle } = useGradientEditor();
+  
+  // Animated backgrounds
+  const animatedBg = useAnimatedBackground();
   
   // Image storage with IndexedDB
   const { 
@@ -40,7 +48,6 @@ function App() {
     isLoading, 
     loadingProgress,
     handleFolderSelect,
-    clearFolderImages 
   } = useImageStorage();
 
   // Slideshow
@@ -66,7 +73,7 @@ function App() {
     return GRADIENTS.gradient1;
   });
 
-  // Обновление текущего фона при изменении типа или значения
+  // Обновление текущего фона
   useEffect(() => {
     if (backgroundType === 'gradient') {
       setCurrentBackground(GRADIENTS[backgroundValue as GradientKey]);
@@ -78,7 +85,6 @@ function App() {
       if (image?.data) {
         setCurrentBackground(image.data);
       } else if (folderImages.length > 0 && !backgroundValue) {
-        // Если есть изображения, но не выбрано, выбираем первое
         setBackgroundValue(folderImages[0].id.toString());
         setCurrentBackground(folderImages[0].data);
       }
@@ -90,6 +96,11 @@ function App() {
     setBackgroundType('gradient');
     setBackgroundValue(gradient);
     slideshow.stopSlideshow();
+  };
+
+  const handleAnimatedSelect = () => {
+    setBackgroundType('animated');
+    // Не останавливаем слайд-шоу, так как анимация может работать вместе с ним
   };
 
   // Select custom gradient
@@ -109,8 +120,12 @@ function App() {
     }
   };
 
-  // Get background style
+  // Get background style for non-animated backgrounds
   const getBackgroundStyle = (): React.CSSProperties => {
+    if (backgroundType === 'animated') {
+      return {}; // Для анимированных фонов стили не нужны, canvas все рисует сам
+    }
+    
     if (backgroundType === 'folder' && currentBackground) {
       return { 
         backgroundImage: `url('${currentBackground}')`,
@@ -144,6 +159,11 @@ function App() {
       className={`${styles.app} ${slideshow.effectClass}`} 
       style={getBackgroundStyle()}
     >
+      {/* Анимированный фон поверх обычного, но под контентом */}
+      {backgroundType === 'animated' && (
+        <AnimatedBackground settings={animatedBg.settings} />
+      )}
+
       {(isLoading || slideshow.isRestoring) && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingContent}>
@@ -188,6 +208,10 @@ function App() {
           onFolderSelect={handleFolderSelect}
           onImageSelect={handleImageSelect}
           
+          // Animated background props
+          animatedSettings={animatedBg.settings}
+          onAnimatedSettingsChange={animatedBg.updateSettings}
+          
           // Clock props
           clockSize={clock.clockSize}
           clockColor={clock.clockColor}
@@ -216,6 +240,7 @@ function App() {
           onShuffleImagesChange={slideshow.setShuffleImages}
           onStartSlideshow={slideshow.startSlideshow}
           onStopSlideshow={slideshow.stopSlideshow}
+          onAnimatedSelect={handleAnimatedSelect}
         />
 
         <ClockDisplay

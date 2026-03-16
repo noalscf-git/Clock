@@ -21,8 +21,9 @@ export interface CustomGradient {
 }
 
 export interface BackgroundState {
-  type: 'gradient' | 'folder' | 'custom';
+  type: 'gradient' | 'folder' | 'custom' | 'animated';
   value: string;
+  animatedSettings?: AnimatedBackground;
 }
 
 export interface ClockSettings {
@@ -56,3 +57,16 @@ export interface SlideshowSettings {
 }
 
 export type GradientKey = 'gradient1' | 'gradient2' | 'gradient3' | 'gradient4' | 'gradient5' | 'gradient6';
+
+export interface AnimatedBackground {
+  id: string;
+  name: string;
+  type: 'particles' | 'waves' | 'stars' | 'matrix' | 'gradient' | 'fire' | 'aurora' | 'bubbles';
+  speed: number; // 0.5 - 3
+  intensity: number; // 0 - 100
+  color1: string;
+  color2: string;
+  color3?: string;
+  density: number; // 1 - 100
+}
+

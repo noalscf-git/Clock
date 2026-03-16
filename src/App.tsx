@@ -1,4 +1,4 @@
-// src/App.tsx - исправляем выбор изображения
+// src/App.tsx - обновляем с использованием нового хука
 import React, { useRef, useState, useEffect } from 'react';
 import { ClockDisplay } from './components/Clock/ClockDisplay';
 import { TopBar } from './components/UI/TopBar';
@@ -9,8 +9,9 @@ import { useClock } from './hooks/useClock';
 import { useSlideshow } from './hooks/useSlideshow';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useGradientEditor } from './hooks/useGradientEditor';
+import { useImageStorage } from './hooks/useImageStorage';
 import { GRADIENTS } from './utils/constants';
-import type { FolderImage, GradientKey, CustomGradient } from './types';
+import type { GradientKey, CustomGradient } from './types';
 import styles from './App.module.css';
 
 function App() {
@@ -32,9 +33,15 @@ function App() {
   // Custom gradients
   const { customGradients, getGradientStyle } = useGradientEditor();
   
-  // Folder images
-  const [folderImages, setFolderImages] = useState<FolderImage[]>([]);
-  const [folderPath, setFolderPath] = useState('');
+  // Image storage with IndexedDB
+  const { 
+    folderImages, 
+    folderPath, 
+    isLoading, 
+    loadingProgress,
+    handleFolderSelect,
+    clearFolderImages 
+  } = useImageStorage();
 
   // Текущий фон для отображения
   const [currentBackground, setCurrentBackground] = useState<string>(() => {
@@ -43,32 +50,11 @@ function App() {
     } else if (backgroundType === 'custom') {
       const gradient = customGradients.find(g => g.id === backgroundValue);
       return gradient ? getGradientStyle(gradient) : GRADIENTS.gradient1;
-    } else if (backgroundType === 'folder') {
-      // Для папки возвращаем пустую строку, потом обновим через useEffect
-      return '';
     }
     return GRADIENTS.gradient1;
   });
 
-  // Загрузка сохраненных метаданных изображений
-  useEffect(() => {
-    const savedMetadata = localStorage.getItem('folderImages');
-    if (savedMetadata) {
-      try {
-        const metadata = JSON.parse(savedMetadata);
-        setFolderImages(metadata.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          path: item.path,
-          data: '' // Пустые данные, будут загружены при выборе папки
-        })));
-      } catch (e) {
-        console.error('Ошибка загрузки метаданных изображений');
-      }
-    }
-  }, []);
-
-  // Обновление текущего фона
+  // Обновление текущего фона при изменении типа или значения
   useEffect(() => {
     if (backgroundType === 'gradient') {
       setCurrentBackground(GRADIENTS[backgroundValue as GradientKey]);
@@ -76,12 +62,11 @@ function App() {
       const gradient = customGradients.find(g => g.id === backgroundValue);
       setCurrentBackground(gradient ? getGradientStyle(gradient) : GRADIENTS.gradient1);
     } else if (backgroundType === 'folder') {
-      // Ищем изображение по ID (backgroundValue хранит ID)
       const image = folderImages.find(img => img.id.toString() === backgroundValue);
       if (image?.data) {
         setCurrentBackground(image.data);
       } else if (folderImages.length > 0 && !backgroundValue) {
-        // Если нет выбранного изображения, но есть изображения в папке
+        // Если есть изображения, но не выбрано, выбираем первое
         setBackgroundValue(folderImages[0].id.toString());
         setCurrentBackground(folderImages[0].data);
       }
@@ -90,65 +75,15 @@ function App() {
 
   // Slideshow
   const slideshow = useSlideshow(
-    folderImages.filter(img => img.data), // Только изображения с данными
+    folderImages.filter(img => img.data),
     (imageData: string) => {
       const image = folderImages.find(img => img.data === imageData);
       if (image) {
         setBackgroundType('folder');
-        setBackgroundValue(image.id.toString()); // Сохраняем ID, а не data URL
+        setBackgroundValue(image.id.toString());
       }
     }
   );
-
-  // Handle folder selection
-  const handleFolderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []).filter(file => 
-      file.type.startsWith('image/')
-    );
-
-    if (files.length > 0) {
-      const path = files[0].webkitRelativePath.split('/')[0];
-      setFolderPath(path || 'Выбрана папка с изображениями');
-
-      const newImages: FolderImage[] = [];
-      let loadedCount = 0;
-
-      files.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          newImages.push({
-            id: index,
-            data: e.target?.result as string,
-            name: file.name,
-            path: file.webkitRelativePath
-          });
-
-          loadedCount++;
-          if (loadedCount === files.length) {
-            // Сортируем изображения по имени
-            newImages.sort((a, b) => a.name.localeCompare(b.name));
-            setFolderImages(newImages);
-            
-            // Автоматически выбираем первое изображение
-            if (newImages.length > 0) {
-              setBackgroundType('folder');
-              setBackgroundValue(newImages[0].id.toString());
-              setCurrentBackground(newImages[0].data);
-            }
-            
-            // Сохраняем метаданные
-            const metadata = newImages.map(img => ({
-              id: img.id,
-              name: img.name,
-              path: img.path
-            }));
-            localStorage.setItem('folderImages', JSON.stringify(metadata));
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-  };
 
   // Select gradient
   const handleGradientSelect = (gradient: GradientKey) => {
@@ -164,15 +99,13 @@ function App() {
     slideshow.stopSlideshow();
   };
 
-  // Select folder image - ИСПРАВЛЕНО!
+  // Select folder image
   const handleImageSelect = (image: FolderImage) => {
     if (image?.data) {
       setBackgroundType('folder');
-      setBackgroundValue(image.id.toString()); // Сохраняем ID
-      setCurrentBackground(image.data); // Сразу устанавливаем фон
+      setBackgroundValue(image.id.toString());
+      setCurrentBackground(image.data);
       slideshow.stopSlideshow();
-    } else {
-      console.warn('Selected image has no data:', image);
     }
   };
 
@@ -186,15 +119,7 @@ function App() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
       };
-    } else if (backgroundType === 'gradient' && currentBackground) {
-      return { 
-        backgroundImage: currentBackground,
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      };
-    } else if (backgroundType === 'custom' && currentBackground) {
+    } else if (currentBackground) {
       return { 
         backgroundImage: currentBackground,
         backgroundAttachment: 'fixed',
@@ -204,7 +129,6 @@ function App() {
       };
     }
     
-    // По умолчанию
     return { 
       backgroundImage: GRADIENTS.gradient1,
       backgroundAttachment: 'fixed',
@@ -220,6 +144,23 @@ function App() {
       className={`${styles.app} ${slideshow.effectClass}`} 
       style={getBackgroundStyle()}
     >
+      {isLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingContent}>
+            <div className={styles.loadingSpinner}></div>
+            <div className={styles.loadingText}>
+              Загрузка изображений... {loadingProgress}%
+            </div>
+            <div className={styles.loadingBar}>
+              <div 
+                className={styles.loadingProgress} 
+                style={{ width: `${loadingProgress}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={styles.container} ref={containerRef}>
         <TopBar 
           onSettingsClick={() => setShowSettings(true)}

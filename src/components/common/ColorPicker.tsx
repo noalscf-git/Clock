@@ -1,4 +1,4 @@
-// src/components/common/ColorPicker.tsx
+// src/components/common/ColorPicker.tsx - обновляем для поддержки большого списка
 import React from 'react';
 import { COLOR_PRESETS } from '../../utils/constants';
 import styles from './ColorPicker.module.css';
@@ -16,8 +16,13 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ value, onChange }) => 
           <div
             key={color}
             className={`${styles.colorPreset} ${value === color ? styles.active : ''}`}
-            style={{ background: color, color: color === '#ffffff' ? '#000' : '#fff' }}
+            style={{ 
+              background: color,
+              color: color === '#ffffff' || color === '#F0FFF0' || color === '#E0FFFF' || color === '#F0E68C' ? '#000' : '#fff',
+              border: color === '#ffffff' ? '1px solid #ccc' : 'none'
+            }}
             onClick={() => onChange(color)}
+            title={name}
           >
             {name}
           </div>

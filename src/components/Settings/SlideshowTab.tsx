@@ -1,4 +1,4 @@
-// src/components/Settings/SlideshowTab.tsx
+// src/components/Settings/SlideshowTab.tsx - добавляем индикатор активного слайд-шоу
 import React from 'react';
 import { TRANSITION_EFFECTS, INTERVAL_OPTIONS } from '../../utils/constants';
 import styles from './SettingsPanel.module.css';
@@ -43,6 +43,12 @@ export const SlideshowTab: React.FC<SlideshowTabProps> = ({
   return (
     <div className={styles.tabContent}>
       <div className={styles.slideshowSettings}>
+        {isActive && (
+          <div className={styles.activeWarning}>
+            ⚡ Слайд-шоу активно. Изменение настроек может повлиять на воспроизведение.
+          </div>
+        )}
+
         <label className={styles.settingItem}>
           <span>Эффект перехода:</span>
           <select 
@@ -122,11 +128,11 @@ export const SlideshowTab: React.FC<SlideshowTabProps> = ({
         
         <div className={styles.slideshowControls}>
           <button 
-            className={styles.slideshowBtn} 
+            className={`${styles.slideshowBtn} ${isActive ? styles.active : ''}`} 
             onClick={onStartSlideshow}
             disabled={isActive}
           >
-            ▶ Старт
+            {isActive ? '▶ Активно...' : '▶ Старт'}
           </button>
           <button 
             className={`${styles.slideshowBtn} ${styles.stop}`} 
@@ -139,6 +145,7 @@ export const SlideshowTab: React.FC<SlideshowTabProps> = ({
         
         <div className={styles.currentStatus} style={{color: isActive ? '#4caf50' : 'rgba(255,255,255,0.7)'}}>
           Статус: {isActive ? 'активно' : 'остановлено'}
+          {isActive && ' (сохраняется после перезагрузки)'}
         </div>
       </div>
     </div>

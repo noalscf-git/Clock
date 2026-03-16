@@ -565,3 +565,34 @@
   transform: translateY(-2px);
   box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
 }
+
+/* src/components/Settings/SettingsPanel.module.css - добавляем новый стиль */
+
+.activeWarning {
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 15px;
+  color: #ffc107;
+  font-size: 13px;
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+.slideshowBtn.active {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  cursor: default;
+  opacity: 0.8;
+}
+
+.slideshowBtn.active:hover {
+  transform: none;
+  box-shadow: none;
+}

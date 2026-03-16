@@ -1,4 +1,4 @@
-// src/App.tsx - обновляем с использованием нового хука
+// src/App.tsx - обновляем для отображения состояния восстановления
 import React, { useRef, useState, useEffect } from 'react';
 import { ClockDisplay } from './components/Clock/ClockDisplay';
 import { TopBar } from './components/UI/TopBar';
@@ -43,6 +43,18 @@ function App() {
     clearFolderImages 
   } = useImageStorage();
 
+  // Slideshow
+  const slideshow = useSlideshow(
+    folderImages.filter(img => img.data),
+    (imageData: string) => {
+      const image = folderImages.find(img => img.data === imageData);
+      if (image) {
+        setBackgroundType('folder');
+        setBackgroundValue(image.id.toString());
+      }
+    }
+  );
+
   // Текущий фон для отображения
   const [currentBackground, setCurrentBackground] = useState<string>(() => {
     if (backgroundType === 'gradient') {
@@ -72,18 +84,6 @@ function App() {
       }
     }
   }, [backgroundType, backgroundValue, folderImages, customGradients, getGradientStyle]);
-
-  // Slideshow
-  const slideshow = useSlideshow(
-    folderImages.filter(img => img.data),
-    (imageData: string) => {
-      const image = folderImages.find(img => img.data === imageData);
-      if (image) {
-        setBackgroundType('folder');
-        setBackgroundValue(image.id.toString());
-      }
-    }
-  );
 
   // Select gradient
   const handleGradientSelect = (gradient: GradientKey) => {
@@ -144,19 +144,23 @@ function App() {
       className={`${styles.app} ${slideshow.effectClass}`} 
       style={getBackgroundStyle()}
     >
-      {isLoading && (
+      {(isLoading || slideshow.isRestoring) && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingContent}>
             <div className={styles.loadingSpinner}></div>
             <div className={styles.loadingText}>
-              Загрузка изображений... {loadingProgress}%
+              {isLoading 
+                ? `Загрузка изображений... ${loadingProgress}%` 
+                : 'Восстановление слайд-шоу...'}
             </div>
-            <div className={styles.loadingBar}>
-              <div 
-                className={styles.loadingProgress} 
-                style={{ width: `${loadingProgress}%` }}
-              />
-            </div>
+            {isLoading && (
+              <div className={styles.loadingBar}>
+                <div 
+                  className={styles.loadingProgress} 
+                  style={{ width: `${loadingProgress}%` }}
+                />
+              </div>
+            )}
           </div>
         </div>
       )}

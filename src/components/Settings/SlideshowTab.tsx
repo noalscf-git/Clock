@@ -1,4 +1,5 @@
-// src/components/Settings/SlideshowTab.tsx - добавляем индикатор активного слайд-шоу
+// src/components/Settings/SlideshowTab.tsx - добавляем новые эффекты в select
+
 import React from 'react';
 import { TRANSITION_EFFECTS, INTERVAL_OPTIONS } from '../../utils/constants';
 import styles from './SettingsPanel.module.css';
@@ -40,6 +41,10 @@ export const SlideshowTab: React.FC<SlideshowTabProps> = ({
 }) => {
   const [minInterval, maxInterval] = randomIntervalRange.split(',').map(Number);
 
+  // Группируем эффекты для лучшей навигации
+  const basicEffects = TRANSITION_EFFECTS.slice(0, 8); // fade, slide, zoom, blur, flip, rotate, bounce, flash
+  const advancedEffects = TRANSITION_EFFECTS.slice(8); // новые эффекты
+
   return (
     <div className={styles.tabContent}>
       <div className={styles.slideshowSettings}>
@@ -56,9 +61,16 @@ export const SlideshowTab: React.FC<SlideshowTabProps> = ({
             onChange={(e) => onEffectChange(e.target.value)}
             disabled={randomEffect}
           >
-            {TRANSITION_EFFECTS.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
+            <optgroup label="Базовые эффекты">
+              {basicEffects.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </optgroup>
+            <optgroup label="Продвинутые эффекты">
+              {advancedEffects.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </optgroup>
           </select>
         </label>
         
@@ -82,7 +94,7 @@ export const SlideshowTab: React.FC<SlideshowTabProps> = ({
               checked={randomEffect}
               onChange={(e) => onRandomEffectChange(e.target.checked)}
             /> 
-            <span>Случайный эффект перехода</span>
+            <span>Случайный эффект перехода (из 20 эффектов)</span>
           </label>
           
           <label>
@@ -146,6 +158,17 @@ export const SlideshowTab: React.FC<SlideshowTabProps> = ({
         <div className={styles.currentStatus} style={{color: isActive ? '#4caf50' : 'rgba(255,255,255,0.7)'}}>
           Статус: {isActive ? 'активно' : 'остановлено'}
           {isActive && ' (сохраняется после перезагрузки)'}
+        </div>
+
+        <div className={styles.effectsPreview}>
+          <h5>Доступные эффекты ({TRANSITION_EFFECTS.length}):</h5>
+          <div className={styles.effectsGrid}>
+            {TRANSITION_EFFECTS.map(effect => (
+              <div key={effect.value} className={styles.effectBadge}>
+                {effect.label}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

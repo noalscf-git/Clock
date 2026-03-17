@@ -122,16 +122,6 @@ export const FONT_PRESETS = [
   { value: 'Comic Sans MS', label: 'Comic Sans MS (неформальный)' }
 ];
 
-export const TRANSITION_EFFECTS = [
-  { value: 'fade', label: 'Плавное появление' },
-  { value: 'slide', label: 'Скольжение' },
-  { value: 'zoom', label: 'Увеличение' },
-  { value: 'blur', label: 'Размытие' },
-  { value: 'flip', label: 'Переворот' },
-  { value: 'rotate', label: 'Вращение' },
-  { value: 'bounce', label: 'Подпрыгивание' },
-  { value: 'flash', label: 'Вспышка' }
-];
 
 export const INTERVAL_OPTIONS = [
   { value: '3', label: '3 секунды' },
@@ -146,7 +136,36 @@ export const INTERVAL_OPTIONS = [
   { value: '3600', label: '1 час' }
 ];
 
-export const EFFECTS = ['fade', 'slide', 'zoom', 'blur', 'flip', 'rotate', 'bounce', 'flash'];
+export const TRANSITION_EFFECTS = [
+  { value: 'fade', label: 'Плавное появление' },
+  { value: 'slide', label: 'Скольжение' },
+  { value: 'zoom', label: 'Увеличение' },
+  { value: 'blur', label: 'Размытие' },
+  { value: 'flip', label: 'Переворот' },
+  { value: 'rotate', label: 'Вращение' },
+  { value: 'bounce', label: 'Подпрыгивание' },
+  { value: 'flash', label: 'Вспышка' },
+  // Новые эффекты
+  { value: 'darken', label: 'Затемнение' },
+  { value: 'desaturate', label: 'Выцветание' },
+  { value: 'horizontal-blur', label: 'Горизонтальное размытие' },
+  { value: 'curtain', label: 'Шторка' },
+  { value: 'xflip', label: 'Переворот по X' },
+  { value: 'diagonal-rotate', label: 'Диагональное вращение' },
+  { value: 'wave', label: 'Волна' },
+  { value: 'lightning', label: 'Молния' },
+  { value: 'kaleidoscope', label: 'Калейдоскоп' },
+  { value: 'pulse', label: 'Пульсация' },
+  { value: 'rainbow', label: 'Радуга' },
+  { value: 'dissolve', label: 'Растворение' }
+];
+
+export const EFFECTS = [
+  'fade', 'slide', 'zoom', 'blur', 'flip', 'rotate', 'bounce', 'flash',
+  'darken', 'desaturate', 'horizontal-blur', 'curtain', 'xflip', 
+  'diagonal-rotate', 'wave', 'lightning', 'kaleidoscope', 'pulse', 
+  'rainbow', 'dissolve'
+];
 
 // src/utils/constants.ts - добавляем анимированные фоны
 export const ANIMATED_BACKGROUNDS = [

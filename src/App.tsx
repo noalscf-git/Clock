@@ -1,9 +1,10 @@
-// src/App.tsx - обновляем импорт и использование
+// src/App.tsx - исправленная версия с двойным буфером фона
+
 import React, { useRef, useState, useEffect } from 'react';
 import { ClockDisplay } from './components/Clock/ClockDisplay';
 import { TopBar } from './components/UI/TopBar';
 import { FullscreenHint } from './components/UI/FullscreenHint';
-import { SettingsPanel } from './components/Settings/SettingsPanel'; // Импортируем обычный SettingsPanel
+import { SettingsPanel } from './components/Settings/SettingsPanel';
 import { AnimatedBackground } from './components/Backgrounds/AnimatedBackground';
 import { useFullscreen } from './hooks/useFullscreen';
 import { useClock } from './hooks/useClock';
@@ -35,6 +36,21 @@ function App() {
   );
   const [backgroundValue, setBackgroundValue] = useLocalStorage<string>('backgroundValue', 'gradient1');
   
+  // Для двойного буфера анимации
+  const [currentBackground, setCurrentBackground] = useState<string>(() => {
+    if (backgroundType === 'gradient') {
+      return GRADIENTS[backgroundValue as GradientKey];
+    } else if (backgroundType === 'custom') {
+      // Будет установлено позже через эффект
+      return GRADIENTS.gradient1;
+    }
+    return GRADIENTS.gradient1;
+  });
+  
+  const [nextBackground, setNextBackground] = useState<string | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionEffect, setTransitionEffect] = useState('');
+  
   // Custom gradients
   const { customGradients, getGradientStyle } = useGradientEditor();
   
@@ -53,33 +69,56 @@ function App() {
   // Slideshow
   const slideshow = useSlideshow(
     folderImages.filter(img => img.data),
-    (imageData: string) => {
-      const image = folderImages.find(img => img.data === imageData);
-      if (image) {
+    (imageData: string, effect?: string) => {
+      // Эта функция вызывается при смене изображения в слайд-шоу
+      if (effect) {
+        startTransition(imageData, effect);
+      } else {
+        // Прямая смена без анимации
         setBackgroundType('folder');
-        setBackgroundValue(image.id.toString());
+        setBackgroundValue(getImageIdByData(imageData).toString());
+        setCurrentBackground(imageData);
       }
     }
   );
 
-  // Текущий фон для отображения
-  const [currentBackground, setCurrentBackground] = useState<string>(() => {
-    if (backgroundType === 'gradient') {
-      return GRADIENTS[backgroundValue as GradientKey];
-    } else if (backgroundType === 'custom') {
-      const gradient = customGradients.find(g => g.id === backgroundValue);
-      return gradient ? getGradientStyle(gradient) : GRADIENTS.gradient1;
-    }
-    return GRADIENTS.gradient1;
-  });
+  // Вспомогательная функция для получения ID изображения по data URL
+  const getImageIdByData = (data: string): number => {
+    const image = folderImages.find(img => img.data === data);
+    return image?.id || 0;
+  };
 
-  // Обновление текущего фона
+  // Функция запуска анимации перехода
+  const startTransition = (newBackground: string, effect: string) => {
+    setNextBackground(newBackground);
+    setTransitionEffect(effect);
+    setIsTransitioning(true);
+    
+    // Через 500ms (длительность анимации) завершаем переход
+    setTimeout(() => {
+      setCurrentBackground(newBackground);
+      setNextBackground(null);
+      setIsTransitioning(false);
+      setTransitionEffect('');
+      
+      // Обновляем backgroundValue если это изображение из папки
+      const image = folderImages.find(img => img.data === newBackground);
+      if (image) {
+        setBackgroundType('folder');
+        setBackgroundValue(image.id.toString());
+      }
+    }, 500);
+  };
+
+  // Обновление текущего фона при изменении настроек
   useEffect(() => {
     if (backgroundType === 'gradient') {
       setCurrentBackground(GRADIENTS[backgroundValue as GradientKey]);
     } else if (backgroundType === 'custom') {
       const gradient = customGradients.find(g => g.id === backgroundValue);
-      setCurrentBackground(gradient ? getGradientStyle(gradient) : GRADIENTS.gradient1);
+      if (gradient) {
+        setCurrentBackground(getGradientStyle(gradient));
+      }
     } else if (backgroundType === 'folder') {
       const image = folderImages.find(img => img.id.toString() === backgroundValue);
       if (image?.data) {
@@ -95,18 +134,19 @@ function App() {
   const handleGradientSelect = (gradient: GradientKey) => {
     setBackgroundType('gradient');
     setBackgroundValue(gradient);
+    setCurrentBackground(GRADIENTS[gradient]);
     slideshow.stopSlideshow();
   };
 
   const handleAnimatedSelect = () => {
     setBackgroundType('animated');
-    // Не останавливаем слайд-шоу, так как анимация может работать вместе с ним
   };
 
   // Select custom gradient
   const handleCustomGradientSelect = (gradient: CustomGradient) => {
     setBackgroundType('custom');
     setBackgroundValue(gradient.id);
+    setCurrentBackground(getGradientStyle(gradient));
     slideshow.stopSlideshow();
   };
 
@@ -121,31 +161,9 @@ function App() {
   };
 
   // Get background style for non-animated backgrounds
-  const getBackgroundStyle = (): React.CSSProperties => {
-    if (backgroundType === 'animated') {
-      return {}; // Для анимированных фонов стили не нужны, canvas все рисует сам
-    }
-    
-    if (backgroundType === 'folder' && currentBackground) {
-      return { 
-        backgroundImage: `url('${currentBackground}')`,
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      };
-    } else if (currentBackground) {
-      return { 
-        backgroundImage: currentBackground,
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      };
-    }
-    
+  const getBackgroundStyle = (background: string): React.CSSProperties => {
     return { 
-      backgroundImage: GRADIENTS.gradient1,
+      backgroundImage: `url('${background}')`,
       backgroundAttachment: 'fixed',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -153,15 +171,38 @@ function App() {
     };
   };
 
+  // Проверка, является ли фон градиентом
+  const isGradient = (bg: string): boolean => {
+    return bg.startsWith('linear-gradient') || bg.startsWith('radial-gradient');
+  };
+
   return (
-    <div 
-      ref={appRef}
-      className={`${styles.app} ${slideshow.effectClass}`} 
-      style={getBackgroundStyle()}
-    >
+    <div ref={appRef} className={styles.app}>
       {/* Анимированный фон поверх обычного, но под контентом */}
       {backgroundType === 'animated' && (
         <AnimatedBackground settings={animatedBg.settings} />
+      )}
+
+      {/* Слой текущего фона */}
+      <div 
+        className={`${styles.backgroundLayer} ${isTransitioning && !nextBackground ? styles.hidden : ''}`}
+        style={
+          backgroundType === 'gradient' || backgroundType === 'custom'
+            ? { background: currentBackground }
+            : getBackgroundStyle(currentBackground)
+        }
+      />
+
+      {/* Слой следующего фона для анимации перехода */}
+      {nextBackground && (
+        <div 
+          className={`${styles.backgroundLayer} ${styles[`${transitionEffect}Transition`]}`}
+          style={
+            isGradient(nextBackground)
+              ? { background: nextBackground }
+              : getBackgroundStyle(nextBackground)
+          }
+        />
       )}
 
       {(isLoading || slideshow.isRestoring) && (
@@ -211,6 +252,7 @@ function App() {
           // Animated background props
           animatedSettings={animatedBg.settings}
           onAnimatedSettingsChange={animatedBg.updateSettings}
+          onAnimatedSelect={handleAnimatedSelect}
           
           // Clock props
           clockSize={clock.clockSize}
@@ -240,7 +282,6 @@ function App() {
           onShuffleImagesChange={slideshow.setShuffleImages}
           onStartSlideshow={slideshow.startSlideshow}
           onStopSlideshow={slideshow.stopSlideshow}
-          onAnimatedSelect={handleAnimatedSelect}
         />
 
         <ClockDisplay

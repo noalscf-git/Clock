@@ -806,3 +806,52 @@
 .animationCard.active {
   animation: pulse 2s infinite;
 }
+
+/* Добавляем в src/components/Settings/SettingsPanel.module.css */
+
+.effectsPreview {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+}
+
+.effectsPreview h5 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.effectsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.effectBadge {
+  padding: 6px 10px;
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.effectBadge:hover {
+  background: rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+optgroup {
+  background: #1a1a2f;
+  color: white;
+  font-weight: bold;
+}
+
+optgroup option {
+  padding: 8px;
+  background: #1a1a2f;
+  color: white;
+}

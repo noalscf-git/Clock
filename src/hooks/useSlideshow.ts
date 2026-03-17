@@ -1,4 +1,5 @@
-// src/hooks/useSlideshow.ts - обновленная версия с сохранением состояния
+// src/hooks/useSlideshow.ts - обновляем тип колбэка
+
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { FolderImage, SlideshowState, SlideshowSettings } from '../types';
 import { EFFECTS } from '../utils/constants';
@@ -19,9 +20,8 @@ const DEFAULT_SLIDESHOW_STATE: SlideshowState = {
 
 export const useSlideshow = (
   folderImages: FolderImage[],
-  onImageChange: (imageData: string) => void
+  onImageChange: (imageData: string, effect?: string) => void // Обновляем тип
 ) => {
-  // Загружаем сохраненное состояние
   const [savedState, setSavedState] = useLocalStorage<SlideshowState>('slideshowState', DEFAULT_SLIDESHOW_STATE);
   
   const [isActive, setIsActive] = useState(savedState.isActive);
@@ -34,14 +34,11 @@ export const useSlideshow = (
   const [currentIndex, setCurrentIndex] = useState(savedState.currentIndex);
   
   const timerRef = useRef<NodeJS.Timeout>();
-  const [effectClass, setEffectClass] = useState('');
   const [playlist, setPlaylist] = useState<FolderImage[]>([]);
   const [isRestoring, setIsRestoring] = useState(true);
 
-  // Фильтруем только изображения с данными
   const validImages = folderImages.filter(img => img.data);
 
-  // Сохраняем состояние при изменениях
   useEffect(() => {
     if (!isRestoring) {
       setSavedState({
@@ -59,10 +56,8 @@ export const useSlideshow = (
     }
   }, [isActive, effect, interval, randomEffect, randomInterval, randomIntervalRange, shuffleImages, currentIndex, playlist, setSavedState, isRestoring]);
 
-  // Восстанавливаем плейлист после загрузки изображений
   useEffect(() => {
     if (validImages.length > 0 && isRestoring) {
-      // Восстанавливаем плейлист из сохраненных ID
       if (savedState.playlistIds.length > 0) {
         const restoredPlaylist = savedState.playlistIds
           .map(id => validImages.find(img => img.id.toString() === id))
@@ -71,13 +66,11 @@ export const useSlideshow = (
         if (restoredPlaylist.length > 0) {
           setPlaylist(restoredPlaylist);
           
-          // Если слайд-шоу было активно, перезапускаем
           if (savedState.isActive) {
             setIsActive(true);
             startSlideshowFromIndex(restoredPlaylist, savedState.currentIndex);
           }
         } else {
-          // Если не удалось восстановить, создаем новый плейлист
           createNewPlaylist();
         }
       } else {
@@ -102,7 +95,6 @@ export const useSlideshow = (
       timerRef.current = undefined;
     }
     setIsActive(false);
-    setEffectClass('');
   }, []);
 
   const showNextImage = useCallback((images: FolderImage[], index: number) => {
@@ -112,15 +104,8 @@ export const useSlideshow = (
       ? EFFECTS[Math.floor(Math.random() * EFFECTS.length)]
       : effect;
     
-    setEffectClass(`${currentEffect}-bg`);
-    
-    setTimeout(() => {
-      onImageChange(images[index].data);
-      
-      setTimeout(() => {
-        setEffectClass('');
-      }, 500);
-    }, 50);
+    // Передаем эффект в колбэк
+    onImageChange(images[index].data, currentEffect);
   }, [randomEffect, effect, onImageChange]);
 
   const startSlideshowFromIndex = useCallback((images: FolderImage[], startIndex: number) => {
@@ -131,7 +116,6 @@ export const useSlideshow = (
     setCurrentIndex(startIndex);
     setIsActive(true);
 
-    // Показываем текущее изображение
     if (images[startIndex]?.data) {
       showNextImage(images, startIndex);
     }
@@ -173,7 +157,6 @@ export const useSlideshow = (
     startSlideshowFromIndex(newPlaylist, 0);
   }, [validImages, createNewPlaylist, startSlideshowFromIndex]);
 
-  // Очистка при размонтировании
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -182,7 +165,6 @@ export const useSlideshow = (
     };
   }, []);
 
-  // Обновление настроек без перезапуска
   const updateSettings = useCallback((newSettings: Partial<SlideshowSettings>) => {
     if (newSettings.effect !== undefined) setEffect(newSettings.effect);
     if (newSettings.interval !== undefined) setInterval(newSettings.interval);
@@ -206,7 +188,6 @@ export const useSlideshow = (
     setRandomIntervalRange,
     shuffleImages,
     setShuffleImages,
-    effectClass,
     startSlideshow,
     stopSlideshow,
     updateSettings,

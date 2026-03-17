@@ -7,7 +7,6 @@
   justify-content: center;
   align-items: center;
   color: #fff;
-  transition: background 0.5s ease;
   margin: 0;
   padding: 0;
   position: relative;
@@ -31,6 +30,25 @@
   -webkit-backface-visibility: hidden;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+}
+
+/* Анимированный фон - поверх обычных фонов, но под контентом */
+:global(.animatedBg) {
+  z-index: 1 !important;
+}
+
+/* Контейнер с контентом - поверх всех фонов */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
 }
 
 /* Скрытый слой */

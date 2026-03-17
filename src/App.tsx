@@ -1,4 +1,4 @@
-// src/App.tsx - исправленная версия с двойным буфером фона
+// src/App.tsx - исправляем отображение анимированного фона
 
 import React, { useRef, useState, useEffect } from 'react';
 import { ClockDisplay } from './components/Clock/ClockDisplay';
@@ -41,7 +41,6 @@ function App() {
     if (backgroundType === 'gradient') {
       return GRADIENTS[backgroundValue as GradientKey];
     } else if (backgroundType === 'custom') {
-      // Будет установлено позже через эффект
       return GRADIENTS.gradient1;
     }
     return GRADIENTS.gradient1;
@@ -70,11 +69,14 @@ function App() {
   const slideshow = useSlideshow(
     folderImages.filter(img => img.data),
     (imageData: string, effect?: string) => {
-      // Эта функция вызывается при смене изображения в слайд-шоу
+      // Не запускаем анимацию перехода, если включен анимированный фон
+      if (backgroundType === 'animated') {
+        return;
+      }
+      
       if (effect) {
         startTransition(imageData, effect);
       } else {
-        // Прямая смена без анимации
         setBackgroundType('folder');
         setBackgroundValue(getImageIdByData(imageData).toString());
         setCurrentBackground(imageData);
@@ -82,26 +84,22 @@ function App() {
     }
   );
 
-  // Вспомогательная функция для получения ID изображения по data URL
   const getImageIdByData = (data: string): number => {
     const image = folderImages.find(img => img.data === data);
     return image?.id || 0;
   };
 
-  // Функция запуска анимации перехода
   const startTransition = (newBackground: string, effect: string) => {
     setNextBackground(newBackground);
     setTransitionEffect(effect);
     setIsTransitioning(true);
     
-    // Через 500ms (длительность анимации) завершаем переход
     setTimeout(() => {
       setCurrentBackground(newBackground);
       setNextBackground(null);
       setIsTransitioning(false);
       setTransitionEffect('');
       
-      // Обновляем backgroundValue если это изображение из папки
       const image = folderImages.find(img => img.data === newBackground);
       if (image) {
         setBackgroundType('folder');
@@ -112,6 +110,11 @@ function App() {
 
   // Обновление текущего фона при изменении настроек
   useEffect(() => {
+    if (backgroundType === 'animated') {
+      // Для анимированного фона не нужно устанавливать currentBackground
+      return;
+    }
+    
     if (backgroundType === 'gradient') {
       setCurrentBackground(GRADIENTS[backgroundValue as GradientKey]);
     } else if (backgroundType === 'custom') {
@@ -130,7 +133,6 @@ function App() {
     }
   }, [backgroundType, backgroundValue, folderImages, customGradients, getGradientStyle]);
 
-  // Select gradient
   const handleGradientSelect = (gradient: GradientKey) => {
     setBackgroundType('gradient');
     setBackgroundValue(gradient);
@@ -140,9 +142,10 @@ function App() {
 
   const handleAnimatedSelect = () => {
     setBackgroundType('animated');
+    // Останавливаем слайд-шоу при выборе анимированного фона
+    slideshow.stopSlideshow();
   };
 
-  // Select custom gradient
   const handleCustomGradientSelect = (gradient: CustomGradient) => {
     setBackgroundType('custom');
     setBackgroundValue(gradient.id);
@@ -150,7 +153,6 @@ function App() {
     slideshow.stopSlideshow();
   };
 
-  // Select folder image
   const handleImageSelect = (image: FolderImage) => {
     if (image?.data) {
       setBackgroundType('folder');
@@ -160,7 +162,6 @@ function App() {
     }
   };
 
-  // Get background style for non-animated backgrounds
   const getBackgroundStyle = (background: string): React.CSSProperties => {
     return { 
       backgroundImage: `url('${background}')`,
@@ -171,38 +172,47 @@ function App() {
     };
   };
 
-  // Проверка, является ли фон градиентом
   const isGradient = (bg: string): boolean => {
     return bg.startsWith('linear-gradient') || bg.startsWith('radial-gradient');
   };
 
+  // Определяем, показывать ли слои фона
+  const shouldShowBackgroundLayers = () => {
+    return backgroundType !== 'animated';
+  };
+
   return (
     <div ref={appRef} className={styles.app}>
-      {/* Анимированный фон поверх обычного, но под контентом */}
+      {/* Анимированный фон - всегда поверх других фонов, но под контентом */}
       {backgroundType === 'animated' && (
         <AnimatedBackground settings={animatedBg.settings} />
       )}
 
-      {/* Слой текущего фона */}
-      <div 
-        className={`${styles.backgroundLayer} ${isTransitioning && !nextBackground ? styles.hidden : ''}`}
-        style={
-          backgroundType === 'gradient' || backgroundType === 'custom'
-            ? { background: currentBackground }
-            : getBackgroundStyle(currentBackground)
-        }
-      />
+      {/* Слои фона - показываем только если не выбран анимированный фон */}
+      {shouldShowBackgroundLayers() && (
+        <>
+          {/* Слой текущего фона */}
+          <div 
+            className={`${styles.backgroundLayer} ${isTransitioning && !nextBackground ? styles.hidden : ''}`}
+            style={
+              backgroundType === 'gradient' || backgroundType === 'custom'
+                ? { background: currentBackground }
+                : getBackgroundStyle(currentBackground)
+            }
+          />
 
-      {/* Слой следующего фона для анимации перехода */}
-      {nextBackground && (
-        <div 
-          className={`${styles.backgroundLayer} ${styles[`${transitionEffect}Transition`]}`}
-          style={
-            isGradient(nextBackground)
-              ? { background: nextBackground }
-              : getBackgroundStyle(nextBackground)
-          }
-        />
+          {/* Слой следующего фона для анимации перехода */}
+          {nextBackground && (
+            <div 
+              className={`${styles.backgroundLayer} ${styles[`${transitionEffect}Transition`]}`}
+              style={
+                isGradient(nextBackground)
+                  ? { background: nextBackground }
+                  : getBackgroundStyle(nextBackground)
+              }
+            />
+          )}
+        </>
       )}
 
       {(isLoading || slideshow.isRestoring) && (

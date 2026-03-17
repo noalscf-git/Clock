@@ -49,6 +49,11 @@ export const useClock = () => {
     setFontFamily,
     clockStyle,
     dateStyle,
-    wrapperStyle
+    wrapperStyle,
+      // Добавляем числовые значения для монитора
+  numericValues: {
+    glowIntensity: Number(glowIntensity),
+    borderOpacity: Number(borderOpacity)
+  }
   };
 };

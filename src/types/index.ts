@@ -70,3 +70,8 @@ export interface AnimatedBackground {
   density: number; // 1 - 100
 }
 
+export interface SystemSettings {
+  showMonitor: boolean;
+  monitorPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  updateInterval: number;
+}

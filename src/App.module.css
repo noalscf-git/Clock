@@ -862,3 +862,33 @@
     animation-duration: 0.3s;
   }
 }
+
+/* Добавляем в конец файла */
+
+.systemMonitor {
+  margin-top: 20px;
+  width: 100%;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* В полноэкранном режиме */
+:fullscreen .systemMonitor {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Добавляем в конец файла */
+.systemMonitor {
+  margin-top: 15px;
+  width: 100%;
+}

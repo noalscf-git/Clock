@@ -12,6 +12,7 @@ import type {
   AnimatedBackground,
 } from "../../types";
 import styles from "./SettingsPanel.module.css";
+import { SystemTab } from "./SystemTab";
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -61,6 +62,12 @@ interface SettingsPanelProps {
   onShuffleImagesChange: (checked: boolean) => void;
   onStartSlideshow: () => void;
   onStopSlideshow: () => void;
+
+  // System monitor props
+  showSystemMonitor: boolean;
+  onShowSystemMonitorChange: (show: boolean) => void;
+  monitorSize: "small" | "medium" | "large"; // Добавляем
+  onMonitorSizeChange: (size: "small" | "medium" | "large") => void; // Добавляем
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({
@@ -77,15 +84,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
     { id: "animated", label: "Анимация", icon: "✨" },
     { id: "clock", label: "Часы", icon: "⏰" },
     { id: "slideshow", label: "Слайд-шоу", icon: "📸" },
+    { id: "system", label: "Система", icon: "📊" }, // Новая вкладка
   ];
 
   return (
     <div className={styles.settingsPanel}>
       <div className={styles.settingsHeader}>
         <h3>Настройки</h3>
-        <button className={styles.closeSettings} onClick={onClose}>
-          ✕
-        </button>
+        <button className={styles.closeSettings} onClick={onClose}>✕</button>
       </div>
 
       <div className={styles.settingsContent}>
@@ -155,6 +161,15 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onShuffleImagesChange={props.onShuffleImagesChange}
             onStartSlideshow={props.onStartSlideshow}
             onStopSlideshow={props.onStopSlideshow}
+          />
+        )}
+
+        {activeTab === "system" && (
+          <SystemTab
+            showSystemMonitor={props.showSystemMonitor}
+            onShowSystemMonitorChange={props.onShowSystemMonitorChange}
+            monitorSize={props.monitorSize} // Добавляем
+            onMonitorSizeChange={props.onMonitorSizeChange} // Добавляем
           />
         )}
       </div>

@@ -25,19 +25,20 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  will-change: transform, opacity, filter;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-}
+  will-change: transform, opacity, filter;}
 
-/* Анимированный фон - поверх обычных фонов, но под контентом */
+/* Анимированный фон */
 :global(.animatedBg) {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
   z-index: 1 !important;
+  pointer-events: none;
 }
 
-/* Контейнер с контентом - поверх всех фонов */
+/* Контейнер с контентом */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -334,69 +335,70 @@
   z-index: 10;
 }
 
-/* ... остальные стили из вашего файла ... */
+/* ========== ПОЛНОЭКРАННЫЙ РЕЖИМ ========== */
 
-/* Полноэкранный режим для контейнера */
-:-webkit-full-screen .container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: transparent !important;
-  padding: 20px;
-  margin: 0;
+/* Когда весь документ в полноэкранном режиме */
+:fullscreen .app,
+:-webkit-full-screen .app,
+:-moz-full-screen .app {
+  width: 100vw;
+  height: 100vh;
+  background: inherit;
 }
 
+:fullscreen .backgroundLayer,
+:-webkit-full-screen .backgroundLayer,
+:-moz-full-screen .backgroundLayer {
+  position: fixed;
+  z-index: 0;
+}
+
+:fullscreen .container,
+:-webkit-full-screen .container,
 :-moz-full-screen .container {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: transparent !important;
-  padding: 20px;
-  margin: 0;
+  z-index: 10;
 }
 
-:fullscreen .container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: transparent !important;
-  padding: 20px;
-  margin: 0;
-}
-
-:fullscreen .topBar {
+:fullscreen .topBar,
+:-webkit-full-screen .topBar,
+:-moz-full-screen .topBar {
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 100;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 30px;
+  padding: 5px;
+  backdrop-filter: blur(5px);
 }
 
 :fullscreen .settingsBtn,
-:fullscreen .fullscreenBtn {
+:fullscreen .fullscreenBtn,
+:-webkit-full-screen .settingsBtn,
+:-webkit-full-screen .fullscreenBtn,
+:-moz-full-screen .settingsBtn,
+:-moz-full-screen .fullscreenBtn {
   opacity: 0.5;
   transition: opacity 0.3s ease;
 }
 
 :fullscreen .topBar:hover .settingsBtn,
-:fullscreen .topBar:hover .fullscreenBtn {
+:fullscreen .topBar:hover .fullscreenBtn,
+:-webkit-full-screen .topBar:hover .settingsBtn,
+:-webkit-full-screen .topBar:hover .fullscreenBtn,
+:-moz-full-screen .topBar:hover .settingsBtn,
+:-moz-full-screen .topBar:hover .fullscreenBtn {
   opacity: 1;
 }
 
-/* Адаптация для маленького экрана */
-@media (max-width: 600px) {
-  .container {
-    padding: 10px;
-  }
-}
 
 /* src/App.module.css - добавляем стили для загрузки */
 .loadingOverlay {

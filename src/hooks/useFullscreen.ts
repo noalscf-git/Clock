@@ -10,22 +10,16 @@ export const useFullscreen = (containerRef: RefObject<HTMLElement>) => {
     if (!container) return;
 
     if (!document.fullscreenElement) {
-      // Запрашиваем полноэкранный режим для контейнера
-      if (container.requestFullscreen) {
-        container.requestFullscreen();
-      } else if ((container as any).webkitRequestFullscreen) {
-        (container as any).webkitRequestFullscreen();
-      } else if ((container as any).msRequestFullscreen) {
-        (container as any).msRequestFullscreen();
+      // Запрашиваем полноэкранный режим для всего документа, а не только контейнера
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if ((document.documentElement as any).webkitRequestFullscreen) {
+        (document.documentElement as any).webkitRequestFullscreen();
+      } else if ((document.documentElement as any).msRequestFullscreen) {
+        (document.documentElement as any).msRequestFullscreen();
+      } else if ((document.documentElement as any).mozRequestFullScreen) {
+        (document.documentElement as any).mozRequestFullScreen();
       }
-      
-      setIsFullscreen(true);
-      setShowHint(true);
-      
-      // Скрываем подсказку через 3 секунды
-      setTimeout(() => {
-        setShowHint(false);
-      }, 3000);
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -33,25 +27,23 @@ export const useFullscreen = (containerRef: RefObject<HTMLElement>) => {
         (document as any).webkitExitFullscreen();
       } else if ((document as any).msExitFullscreen) {
         (document as any).msExitFullscreen();
+      } else if ((document as any).mozCancelFullScreen) {
+        (document as any).mozCancelFullScreen();
       }
-      setIsFullscreen(false);
-      setShowHint(false);
     }
-  }, [containerRef]);
+  }, []); // Убираем зависимость от containerRef
 
   useEffect(() => {
     const handleFullscreenChange = () => {
       const isFs = !!document.fullscreenElement;
       setIsFullscreen(isFs);
       
-      if (!isFs) {
-        setShowHint(false);
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && document.fullscreenElement) {
-        setIsFullscreen(false);
+      if (isFs) {
+        setShowHint(true);
+        setTimeout(() => {
+          setShowHint(false);
+        }, 3000);
+      } else {
         setShowHint(false);
       }
     };
@@ -60,14 +52,12 @@ export const useFullscreen = (containerRef: RefObject<HTMLElement>) => {
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
     document.addEventListener('mozfullscreenchange', handleFullscreenChange);
     document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
       document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
-      document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 

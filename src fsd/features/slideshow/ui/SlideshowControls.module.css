@@ -1,0 +1,290 @@
+/* src/features/slideshow/ui/SlideshowControls.module.css */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.select {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(30, 30, 50, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.select:hover:not(:disabled) {
+  background-color: rgba(50, 50, 70, 0.9);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.select:focus {
+  outline: none;
+  border-color: #00b4db;
+}
+
+.select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.select optgroup {
+  background: #1a1a2f;
+  color: white;
+  font-weight: 500;
+}
+
+.select option {
+  background: #1a1a2f;
+  color: white;
+  padding: 8px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.checkbox input[type="checkbox"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rangeControl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.range {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: linear-gradient(90deg, #00b4db, #0083b0);
+  border-radius: 2px;
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.range::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.range:disabled {
+  opacity: 0.5;
+}
+
+.range:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.rangeValue {
+  min-width: 40px;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 100px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.startButton {
+  background: linear-gradient(135deg, #00b4db, #0083b0);
+  color: white;
+}
+
+.startButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 180, 219, 0.4);
+}
+
+.startButton.active {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  cursor: default;
+}
+
+.stopButton {
+  background: linear-gradient(135deg, #f12711, #f5af19);
+  color: white;
+}
+
+.stopButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(241, 39, 17, 0.4);
+}
+
+.navButton {
+  flex: 0 0 auto;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+}
+
+.navButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+}
+
+.statusIndicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f44336;
+  transition: background-color 0.3s ease;
+}
+
+.statusIndicator.active {
+  background: #4CAF50;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}
+
+.activeWarning {
+  padding: 12px;
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  color: #ffc107;
+  font-size: 13px;
+  text-align: center;
+  animation: fadeInOut 2s infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+
+.infoIcon {
+  font-size: 14px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .controlGroup {
+    padding: 12px;
+  }
+  
+  .button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  
+  .buttonGroup {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttonGroup {
+    flex-direction: column;
+  }
+  
+  .navButton {
+    flex: 1;
+  }
+}

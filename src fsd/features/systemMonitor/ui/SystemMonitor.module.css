@@ -1,0 +1,275 @@
+/* src/features/systemMonitor/ui/SystemMonitor.module.css */
+.monitor {
+  position: relative;
+  width: 100%;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.metricItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.metricItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+.metricIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+}
+
+.metricItem:hover .metricIcon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.metricContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.metricLabel {
+  margin-bottom: 2px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metricValueWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.metricValue {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  transition: text-shadow 0.3s ease;
+}
+
+.metricBar {
+  flex: 1;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.metricFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.metricTemp {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Размеры */
+.small .metricItem {
+  padding: 4px;
+}
+
+.small .metricValue {
+  min-width: 35px;
+}
+
+.medium .metricItem {
+  padding: 6px;
+}
+
+.large .metricItem {
+  padding: 8px;
+}
+
+/* Дополнительная информация */
+.additionalInfo {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.infoChip {
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Состояние загрузки */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #00b4db;
+  border-right-color: #0083b0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Состояние ошибки */
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(244, 67, 54, 0.1) !important;
+  border-color: rgba(244, 67, 54, 0.3) !important;
+}
+
+.errorIcon {
+  font-size: 16px;
+}
+
+.errorText {
+  color: #ff8a80;
+  font-size: 12px;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.monitor {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .metricsGrid {
+    gap: 6px;
+  }
+  
+  .metricItem {
+    padding: 4px;
+  }
+  
+  .additionalInfo {
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+  
+  .infoChip {
+    padding: 2px 6px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .metricItem {
+    padding: 6px;
+  }
+}
+
+/* Темная тема (всегда темная, но можно добавить поддержку) */
+@media (prefers-color-scheme: dark) {
+  .monitor {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Поддержка полноэкранного режима */
+:fullscreen .monitor,
+:-webkit-full-screen .monitor,
+:-moz-full-screen .monitor {
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Анимация пульсации для активных элементов */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.metricFill[style*="background: #F44336"] {
+  animation: pulseGlow 1s infinite;
+}
+
+/* Стили для скроллбара в дополнительной информации */
+.additionalInfo::-webkit-scrollbar {
+  height: 2px;
+}
+
+.additionalInfo::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.additionalInfo::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.additionalInfo::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

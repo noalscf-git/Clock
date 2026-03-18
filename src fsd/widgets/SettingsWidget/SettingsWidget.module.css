@@ -1,0 +1,68 @@
+/* src/widgets/SettingsWidget/SettingsWidget.module.css */
+.widget {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.widget > * {
+  pointer-events: auto;
+}
+
+/* Анимация появления */
+@keyframes widgetFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.widget {
+  animation: widgetFadeIn 0.2s ease;
+}
+
+/* Затемнение фона при открытых настройках */
+.widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.widget:has(.settingsPanel)::before {
+  opacity: 1;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .widget::before {
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* Поддержка полноэкранного режима */
+:fullscreen .widget::before,
+:-webkit-full-screen .widget::before,
+:-moz-full-screen .widget::before {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .widget::before {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}

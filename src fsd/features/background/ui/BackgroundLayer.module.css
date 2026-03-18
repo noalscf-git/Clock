@@ -1,0 +1,316 @@
+/* src/features/background/ui/BackgroundLayer.module.css */
+.layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform, opacity, filter;
+  transition: opacity 0.3s ease;
+}
+
+.layer.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* FADE - плавное появление */
+.fadeTransition {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SLIDE - скольжение */
+.slideTransition {
+  animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* ZOOM - увеличение */
+.zoomTransition {
+  animation: zoomIn 0.5s ease forwards;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* BLUR - размытие */
+.blurTransition {
+  animation: blurIn 0.5s ease forwards;
+}
+
+@keyframes blurIn {
+  from { filter: blur(10px); opacity: 0; }
+  to { filter: blur(0); opacity: 1; }
+}
+
+/* FLIP - переворот */
+.flipTransition {
+  animation: flipIn 0.5s ease forwards;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@keyframes flipIn {
+  from { transform: rotateY(90deg); opacity: 0; }
+  to { transform: rotateY(0); opacity: 1; }
+}
+
+/* ROTATE - вращение */
+.rotateTransition {
+  animation: rotateIn 0.5s ease forwards;
+}
+
+@keyframes rotateIn {
+  from { transform: rotate(-180deg) scale(0.5); opacity: 0; }
+  to { transform: rotate(0) scale(1); opacity: 1; }
+}
+
+/* BOUNCE - подпрыгивание */
+.bounceTransition {
+  animation: bounceIn 0.5s ease forwards;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  70% { transform: scale(0.9); opacity: 0.9; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* FLASH - вспышка */
+.flashTransition {
+  animation: flashIn 0.5s ease forwards;
+}
+
+@keyframes flashIn {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.3; }
+}
+
+/* DARKEN - затемнение */
+.darkenTransition {
+  animation: darkenIn 0.5s ease forwards;
+}
+
+@keyframes darkenIn {
+  from { filter: brightness(0.5); opacity: 0.5; }
+  to { filter: brightness(1); opacity: 1; }
+}
+
+/* DESATURATE - выцветание */
+.desaturateTransition {
+  animation: desaturateIn 0.5s ease forwards;
+}
+
+@keyframes desaturateIn {
+  from { filter: saturate(0); opacity: 0.5; }
+  to { filter: saturate(1); opacity: 1; }
+}
+
+/* HORIZONTAL-BLUR - горизонтальное размытие */
+.horizontalBlurTransition {
+  animation: horizontalBlurIn 0.5s ease forwards;
+}
+
+@keyframes horizontalBlurIn {
+  from { 
+    filter: blur(20px); 
+    transform: scaleX(0.8); 
+    opacity: 0; 
+  }
+  to { 
+    filter: blur(0); 
+    transform: scaleX(1); 
+    opacity: 1; 
+  }
+}
+
+/* CURTAIN - шторка */
+.curtainTransition {
+  animation: curtainIn 0.5s ease forwards;
+}
+
+@keyframes curtainIn {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* XFLIP - переворот по X */
+.xflipTransition {
+  animation: xflipIn 0.5s ease forwards;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@keyframes xflipIn {
+  from { transform: rotateX(90deg); opacity: 0; }
+  to { transform: rotateX(0); opacity: 1; }
+}
+
+/* DIAGONAL-ROTATE - диагональное вращение */
+.diagonalRotateTransition {
+  animation: diagonalRotateIn 0.5s ease forwards;
+}
+
+@keyframes diagonalRotateIn {
+  from { 
+    transform: rotate(45deg) scale(0.7); 
+    opacity: 0; 
+  }
+  to { 
+    transform: rotate(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* WAVE - волна */
+.waveTransition {
+  animation: waveIn 0.5s ease forwards;
+}
+
+@keyframes waveIn {
+  0% { 
+    transform: skewX(30deg) scale(0.8); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: skewX(-10deg) scale(1.05); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: skewX(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* LIGHTNING - молния */
+.lightningTransition {
+  animation: lightningIn 0.3s ease forwards;
+}
+
+@keyframes lightningIn {
+  0%, 100% { filter: brightness(1); }
+  20%, 40%, 60%, 80% { filter: brightness(2); }
+  10%, 30%, 50%, 70%, 90% { filter: brightness(1); }
+}
+
+/* KALEIDOSCOPE - калейдоскоп */
+.kaleidoscopeTransition {
+  animation: kaleidoscopeIn 0.5s ease forwards;
+}
+
+@keyframes kaleidoscopeIn {
+  from { 
+    transform: scale(0.5) rotate(-180deg); 
+    filter: hue-rotate(180deg); 
+    opacity: 0; 
+  }
+  to { 
+    transform: scale(1) rotate(0); 
+    filter: hue-rotate(0); 
+    opacity: 1; 
+  }
+}
+
+/* PULSE - пульсация */
+.pulseTransition {
+  animation: pulseIn 0.5s ease forwards;
+}
+
+@keyframes pulseIn {
+  0% { 
+    transform: scale(0.9); 
+    opacity: 0.5; 
+  }
+  50% { 
+    transform: scale(1.05); 
+    opacity: 0.9; 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* RAINBOW - радуга */
+.rainbowTransition {
+  animation: rainbowIn 0.5s ease forwards;
+}
+
+@keyframes rainbowIn {
+  from { 
+    filter: hue-rotate(0deg) saturate(0); 
+    opacity: 0; 
+  }
+  50% { 
+    filter: hue-rotate(180deg) saturate(2); 
+    opacity: 0.8; 
+  }
+  100% { 
+    filter: hue-rotate(360deg) saturate(1); 
+    opacity: 1; 
+  }
+}
+
+/* DISSOLVE - растворение */
+.dissolveTransition {
+  animation: dissolveIn 0.5s ease forwards;
+}
+
+@keyframes dissolveIn {
+  from { 
+    clip-path: circle(0% at 50% 50%); 
+    opacity: 0; 
+  }
+  to { 
+    clip-path: circle(150% at 50% 50%); 
+    opacity: 1; 
+  }
+}
+
+/* Оптимизация производительности */
+.layer {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .fadeTransition,
+  .slideTransition,
+  .zoomTransition,
+  .blurTransition,
+  .flipTransition,
+  .rotateTransition,
+  .bounceTransition,
+  .flashTransition {
+    animation-duration: 0.3s;
+  }
+}
+
+/* Поддержка полноэкранного режима */
+:fullscreen .layer,
+:-webkit-full-screen .layer,
+:-moz-full-screen .layer {
+  position: fixed;
+  z-index: 0;
+}

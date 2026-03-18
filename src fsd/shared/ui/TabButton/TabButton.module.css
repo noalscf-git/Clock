@@ -1,0 +1,65 @@
+/* src/shared/ui/TabButton/TabButton.module.css */
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tab:hover:not(.disabled) {
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab.active {
+  color: white;
+  border-bottom-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.tab.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .tab {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .icon {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab {
+    padding: 8px;
+  }
+  
+  .label {
+    display: none;
+  }
+  
+  .icon {
+    font-size: 18px;
+  }
+}

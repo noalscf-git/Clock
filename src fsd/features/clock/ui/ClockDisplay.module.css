@@ -1,0 +1,93 @@
+/* src/features/clock/ui/ClockDisplay.module.css */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 90vw;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 20px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.digit {
+  display: inline-block;
+  width: 1.5em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s ease;
+}
+
+.colon {
+  width: 0.5em !important;
+  text-align: center;
+  animation: blink 1s infinite;
+}
+
+.date {
+  text-align: center;
+  font-weight: 300;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .clock {
+    gap: 2px;
+  }
+  
+  .digit {
+    width: 1.3em;
+  }
+  
+  .colon {
+    width: 0.4em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .clock {
+    gap: 0;
+  }
+  
+  .digit {
+    width: 1.2em;
+  }
+  
+  .colon {
+    width: 0.3em !important;
+  }
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wrapper {
+  animation: fadeIn 0.5s ease;
+}

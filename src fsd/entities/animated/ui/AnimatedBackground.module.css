@@ -1,0 +1,46 @@
+/* src/entities/animated/ui/AnimatedBackground.module.css */
+.canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .canvas {
+    opacity: 0.9;
+  }
+}
+
+/* Поддержка полноэкранного режима */
+:fullscreen .canvas,
+:-webkit-full-screen .canvas,
+:-moz-full-screen .canvas {
+  position: fixed;
+  z-index: 0;
+}
+
+/* Оптимизация производительности */
+.canvas {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Затемнение для лучшей читаемости текста */
+.canvas::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}

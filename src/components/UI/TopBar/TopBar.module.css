@@ -2,13 +2,12 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 40px;
   gap: 15px;
-  width: 100%;
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 100;
+  overflow: hidden;
 }
 
 .settingsBtn {
@@ -23,6 +22,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
+  overflow: hidden;
 }
 
 .settingsBtn:hover {
@@ -49,6 +49,7 @@
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 15px rgba(0, 180, 219, 0.3);
+  overflow: hidden;
 }
 
 .fullscreenBtn:hover {

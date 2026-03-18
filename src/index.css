@@ -1,10 +1,9 @@
-/* src/index.css */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html, body, #root {
@@ -12,6 +11,7 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Убираем прокрутку на корневых элементах */
   background: transparent;
 }
 
@@ -19,10 +19,8 @@ body {
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: transparent;
+  overflow: hidden; /* Дополнительно убираем прокрутку */
 }
 
 #root {
@@ -30,9 +28,9 @@ body {
   justify-content: center;
   align-items: center;
   background: transparent;
+  overflow: hidden;
 }
 
-/* Базовые стили для полноэкранного режима */
 :fullscreen,
 :-webkit-full-screen,
 :-moz-full-screen {

@@ -1,6 +1,18 @@
+/* ==========================================================================
+   APP.MODULE.CSS — ГЛАВНЫЙ ФАЙЛ СТИЛЕЙ
+   ========================================================================== */
+
+/* --------------------------------------
+   1. БАЗОВЫЕ СТИЛИ КОНТЕЙНЕРОВ
+   -------------------------------------- */
+
+/**
+ * Основной контейнер приложения
+ * Занимает весь экран, центрирует содержимое
+ */
 .app {
-  width: 100%;
-  min-height: 100vh;
+
+  height: '100%';
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,38 +23,152 @@
   overflow: hidden;
 }
 
+/**
+ * Контейнер с контентом (часы + монитор)
+ * Расположен над фоновыми слоями
+ */
+.container {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* --------------------------------------
+   2. СЛОИ ФОНА
+   -------------------------------------- */
+
+/**
+ * Базовый слой для статического фона
+ * (градиенты и изображения)
+ */
 .backgroundLayer {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   will-change: transform, opacity, filter;
+  overflow: hidden;
 }
 
+/**
+ * Скрытый слой (используется при переходах)
+ */
 .backgroundLayer.hidden {
   opacity: 0;
   pointer-events: none;
 }
 
-.container {
+/* --------------------------------------
+   3. СИСТЕМНЫЙ МОНИТОР
+   -------------------------------------- */
+
+.systemMonitor {
+  margin-top: 15px;
   width: 100%;
   max-width: 1200px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  position: relative;
-  z-index: 10;
+  overflow: hidden;
 }
 
+/* --------------------------------------
+   4. ЗАГРУЗОЧНЫЙ ЭКРАН (LOADING OVERLAY)
+   -------------------------------------- */
+
+/**
+ * Затемнённый оверлей поверх всего контента
+ */
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+  overflow: hidden;
+}
+
+/**
+ * Контейнер с контентом загрузки
+ */
+.loadingContent {
+  background: rgba(20, 20, 40, 0.9);
+  padding: 30px 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  min-width: 300px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+/**
+ * Анимированный спиннер
+ */
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #667eea;
+  border-right-color: #764ba2;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+/**
+ * Текст загрузки
+ */
+.loadingText {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+/**
+ * Полоса прогресса
+ */
+.loadingBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+/**
+ * Заполнение полосы прогресса
+ */
+.loadingProgress {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+  border-radius: 3px;
+}
+
+/* --------------------------------------
+   5. АНИМАЦИИ ПЕРЕХОДОВ (СЛАЙД-ШОУ)
+   -------------------------------------- */
+
+/* ----- 5.1. FADE (Плавное появление) ----- */
 .fadeTransition {
   animation: fadeIn 0.5s ease forwards;
 }
@@ -52,6 +178,7 @@
   to { opacity: 1; }
 }
 
+/* ----- 5.2. SLIDE (Скольжение) ----- */
 .slideTransition {
   animation: slideIn 0.5s ease forwards;
 }
@@ -61,6 +188,7 @@
   to { transform: translateX(0); }
 }
 
+/* ----- 5.3. ZOOM (Увеличение) ----- */
 .zoomTransition {
   animation: zoomIn 0.5s ease forwards;
 }
@@ -70,6 +198,7 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+/* ----- 5.4. BLUR (Размытие) ----- */
 .blurTransition {
   animation: blurIn 0.5s ease forwards;
 }
@@ -79,6 +208,7 @@
   to { filter: blur(0); opacity: 1; }
 }
 
+/* ----- 5.5. FLIP (Переворот по Y) ----- */
 .flipTransition {
   animation: flipIn 0.5s ease forwards;
   transform-style: preserve-3d;
@@ -90,6 +220,7 @@
   to { transform: rotateY(0); opacity: 1; }
 }
 
+/* ----- 5.6. ROTATE (Вращение) ----- */
 .rotateTransition {
   animation: rotateIn 0.5s ease forwards;
 }
@@ -99,6 +230,7 @@
   to { transform: rotate(0) scale(1); opacity: 1; }
 }
 
+/* ----- 5.7. BOUNCE (Подпрыгивание) ----- */
 .bounceTransition {
   animation: bounceIn 0.5s ease forwards;
 }
@@ -110,6 +242,7 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* ----- 5.8. FLASH (Вспышка) ----- */
 .flashTransition {
   animation: flashIn 0.5s ease forwards;
 }
@@ -119,6 +252,7 @@
   25%, 75% { opacity: 0.3; }
 }
 
+/* ----- 5.9. DARKEN (Затемнение) ----- */
 .darkenTransition {
   animation: darkenIn 0.5s ease forwards;
 }
@@ -128,6 +262,7 @@
   to { filter: brightness(1); opacity: 1; }
 }
 
+/* ----- 5.10. DESATURATE (Выцветание) ----- */
 .desaturateTransition {
   animation: desaturateIn 0.5s ease forwards;
 }
@@ -137,6 +272,7 @@
   to { filter: saturate(1); opacity: 1; }
 }
 
+/* ----- 5.11. HORIZONTAL-BLUR (Горизонтальное размытие) ----- */
 .horizontal-blurTransition {
   animation: horizontalBlurIn 0.5s ease forwards;
 }
@@ -154,6 +290,7 @@
   }
 }
 
+/* ----- 5.12. CURTAIN (Шторка) ----- */
 .curtainTransition {
   animation: curtainIn 0.5s ease forwards;
   clip-path: inset(0 100% 0 0);
@@ -164,6 +301,7 @@
   to { clip-path: inset(0 0 0 0); }
 }
 
+/* ----- 5.13. XFLIP (Переворот по X) ----- */
 .xflipTransition {
   animation: xflipIn 0.5s ease forwards;
   transform-style: preserve-3d;
@@ -175,6 +313,7 @@
   to { transform: rotateX(0); opacity: 1; }
 }
 
+/* ----- 5.14. DIAGONAL-ROTATE (Диагональное вращение) ----- */
 .diagonal-rotateTransition {
   animation: diagonalRotateIn 0.5s ease forwards;
 }
@@ -190,6 +329,7 @@
   }
 }
 
+/* ----- 5.15. WAVE (Волна) ----- */
 .waveTransition {
   animation: waveIn 0.5s ease forwards;
 }
@@ -209,6 +349,7 @@
   }
 }
 
+/* ----- 5.16. LIGHTNING (Молния) ----- */
 .lightningTransition {
   animation: lightningIn 0.3s ease forwards;
 }
@@ -219,6 +360,7 @@
   10%, 30%, 50%, 70%, 90% { filter: brightness(1); }
 }
 
+/* ----- 5.17. KALEIDOSCOPE (Калейдоскоп) ----- */
 .kaleidoscopeTransition {
   animation: kaleidoscopeIn 0.5s ease forwards;
 }
@@ -236,6 +378,7 @@
   }
 }
 
+/* ----- 5.18. PULSE (Пульсация) ----- */
 .pulseTransition {
   animation: pulseIn 0.5s ease forwards;
 }
@@ -255,6 +398,7 @@
   }
 }
 
+/* ----- 5.19. RAINBOW (Радуга) ----- */
 .rainbowTransition {
   animation: rainbowIn 0.5s ease forwards;
 }
@@ -274,6 +418,7 @@
   }
 }
 
+/* ----- 5.20. DISSOLVE (Растворение) ----- */
 .dissolveTransition {
   animation: dissolveIn 0.5s ease forwards;
   clip-path: circle(0% at 50% 50%);
@@ -284,73 +429,21 @@
   to { clip-path: circle(150% at 50% 50%); opacity: 1; }
 }
 
-.loadingOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(5px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-  animation: fadeIn 0.3s ease;
-}
+/* --------------------------------------
+   6. ПОЛНОЭКРАННЫЙ РЕЖИМ
+   -------------------------------------- */
 
-.loadingContent {
-  background: rgba(20, 20, 40, 0.9);
-  padding: 30px 40px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  text-align: center;
-  min-width: 300px;
-}
-
-.loadingSpinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #667eea;
-  border-right-color: #764ba2;
-  border-radius: 50%;
-  margin: 0 auto 20px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.loadingText {
-  color: white;
-  font-size: 16px;
-  margin-bottom: 15px;
-}
-
-.loadingBar {
-  width: 100%;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.loadingProgress {
-  height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  transition: width 0.3s ease;
-  border-radius: 3px;
-}
-
+/**
+ * Стили для полноэкранного режима
+ * (поддержка всех браузеров)
+ */
 :fullscreen .app,
 :-webkit-full-screen .app,
 :-moz-full-screen .app {
   width: 100vw;
   height: 100vh;
   background: inherit;
+  overflow: hidden;
 }
 
 :fullscreen .backgroundLayer,
@@ -358,6 +451,7 @@
 :-moz-full-screen .backgroundLayer {
   position: fixed;
   z-index: 0;
+  overflow: hidden;
 }
 
 :fullscreen .container,
@@ -372,6 +466,7 @@
   justify-content: center;
   align-items: center;
   z-index: 10;
+  overflow: hidden;
 }
 
 :fullscreen .topBar,
@@ -404,9 +499,4 @@
 :-moz-full-screen .topBar:hover .settingsBtn,
 :-moz-full-screen .topBar:hover .fullscreenBtn {
   opacity: 1;
-}
-
-.systemMonitor {
-  margin-top: 15px;
-  width: 100%;
 }

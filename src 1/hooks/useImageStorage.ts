@@ -1,7 +1,7 @@
 // src/hooks/useImageStorage.ts - хук для работы с изображениями
 import { useState, useEffect, useCallback } from 'react';
 import type { FolderImage } from '../types';
-import { getAllImages, saveImages, clearImages } from '../utils/storage/indexedDB';
+import { getAllImages, saveImages, clearImages } from '../utils/indexedDB';
 
 export const useImageStorage = () => {
   const [folderImages, setFolderImages] = useState<FolderImage[]>([]);

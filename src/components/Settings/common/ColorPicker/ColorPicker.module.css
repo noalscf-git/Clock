@@ -1,0 +1,114 @@
+.colorPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #667eea rgba(255, 255, 255, 0.1);
+}
+
+.presets::-webkit-scrollbar {
+  width: 8px;
+}
+
+.presets::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.presets::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 4px;
+}
+
+.presets::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
+}
+
+.colorPreset {
+  padding: 12px 8px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 11px;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.colorPreset:hover {
+  transform: scale(1.05);
+  border-color: white;
+  z-index: 1;
+  box-shadow: 0 0 15px currentColor;
+}
+
+.colorPreset.active {
+  border-color: #00ff00;
+  box-shadow: 0 0 20px #00ff00;
+  transform: scale(1.02);
+}
+
+.customColor {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.customColor label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.customColor input {
+  width: 60px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.customColor input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.customColor input::-webkit-color-swatch {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .presets {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    max-height: 250px;
+  }
+  
+  .colorPreset {
+    padding: 8px 4px;
+    font-size: 10px;
+    min-height: 50px;
+  }
+}

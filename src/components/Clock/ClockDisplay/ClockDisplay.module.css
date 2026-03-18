@@ -1,0 +1,72 @@
+.clockWrapper {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, border-color 0.3s ease, padding 0.3s ease;
+  max-width: 90vw;
+}
+
+.digitalClock {
+  font-family: 'Orbitron', monospace;
+  font-size: 6rem;
+  font-weight: 700;
+  text-align: center;
+  color: #00ffff;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.3s ease, text-shadow 0.3s ease, font-size 0.3s ease;
+  line-height: 1;
+}
+
+.digitalClock span {
+  display: inline-block;
+  width: 1.5em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.colon {
+  width: 0.5em !important;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.date {
+  font-size: 1.5rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+  transition: font-size 0.3s ease;
+}
+
+@media (max-width: 600px) {
+  .digitalClock {
+    font-size: 3rem;
+  }
+  
+  .digitalClock span {
+    width: 1.3em;
+  }
+  
+  .clockWrapper {
+    padding: 20px;
+  }
+  
+  .date {
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,896 @@
+/* src/App.module.css - добавляем стили для слоев фона */
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Слои фона */
+.backgroundLayer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform, opacity, filter;}
+
+/* Анимированный фон */
+:global(.animatedBg) {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  pointer-events: none;
+}
+
+/* Контейнер с контентом */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+}
+
+/* Скрытый слой */
+.backgroundLayer.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Анимации переходов */
+
+/* FADE */
+.fadeTransition {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SLIDE */
+.slideTransition {
+  animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* ZOOM */
+.zoomTransition {
+  animation: zoomIn 0.5s ease forwards;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* BLUR */
+.blurTransition {
+  animation: blurIn 0.5s ease forwards;
+}
+
+@keyframes blurIn {
+  from { filter: blur(10px); opacity: 0; }
+  to { filter: blur(0); opacity: 1; }
+}
+
+/* FLIP */
+.flipTransition {
+  animation: flipIn 0.5s ease forwards;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@keyframes flipIn {
+  from { transform: rotateY(90deg); opacity: 0; }
+  to { transform: rotateY(0); opacity: 1; }
+}
+
+/* ROTATE */
+.rotateTransition {
+  animation: rotateIn 0.5s ease forwards;
+}
+
+@keyframes rotateIn {
+  from { transform: rotate(-180deg) scale(0.5); opacity: 0; }
+  to { transform: rotate(0) scale(1); opacity: 1; }
+}
+
+/* BOUNCE */
+.bounceTransition {
+  animation: bounceIn 0.5s ease forwards;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  70% { transform: scale(0.9); opacity: 0.9; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* FLASH */
+.flashTransition {
+  animation: flashIn 0.5s ease forwards;
+}
+
+@keyframes flashIn {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.3; }
+}
+
+/* DARKEN */
+.darkenTransition {
+  animation: darkenIn 0.5s ease forwards;
+}
+
+@keyframes darkenIn {
+  from { filter: brightness(0.5); opacity: 0.5; }
+  to { filter: brightness(1); opacity: 1; }
+}
+
+/* DESATURATE */
+.desaturateTransition {
+  animation: desaturateIn 0.5s ease forwards;
+}
+
+@keyframes desaturateIn {
+  from { filter: saturate(0); opacity: 0.5; }
+  to { filter: saturate(1); opacity: 1; }
+}
+
+/* HORIZONTAL-BLUR */
+.horizontal-blurTransition {
+  animation: horizontalBlurIn 0.5s ease forwards;
+}
+
+@keyframes horizontalBlurIn {
+  from { 
+    filter: blur(20px); 
+    transform: scaleX(0.8); 
+    opacity: 0; 
+  }
+  to { 
+    filter: blur(0); 
+    transform: scaleX(1); 
+    opacity: 1; 
+  }
+}
+
+/* CURTAIN */
+.curtainTransition {
+  animation: curtainIn 0.5s ease forwards;
+  clip-path: inset(0 100% 0 0);
+}
+
+@keyframes curtainIn {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* XFLIP */
+.xflipTransition {
+  animation: xflipIn 0.5s ease forwards;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@keyframes xflipIn {
+  from { transform: rotateX(90deg); opacity: 0; }
+  to { transform: rotateX(0); opacity: 1; }
+}
+
+/* DIAGONAL-ROTATE */
+.diagonal-rotateTransition {
+  animation: diagonalRotateIn 0.5s ease forwards;
+}
+
+@keyframes diagonalRotateIn {
+  from { 
+    transform: rotate(45deg) scale(0.7); 
+    opacity: 0; 
+  }
+  to { 
+    transform: rotate(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* WAVE */
+.waveTransition {
+  animation: waveIn 0.5s ease forwards;
+}
+
+@keyframes waveIn {
+  0% { 
+    transform: skewX(30deg) scale(0.8); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: skewX(-10deg) scale(1.05); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: skewX(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* LIGHTNING */
+.lightningTransition {
+  animation: lightningIn 0.3s ease forwards;
+}
+
+@keyframes lightningIn {
+  0%, 100% { filter: brightness(1); }
+  20%, 40%, 60%, 80% { filter: brightness(2); }
+  10%, 30%, 50%, 70%, 90% { filter: brightness(1); }
+}
+
+/* KALEIDOSCOPE */
+.kaleidoscopeTransition {
+  animation: kaleidoscopeIn 0.5s ease forwards;
+}
+
+@keyframes kaleidoscopeIn {
+  from { 
+    transform: scale(0.5) rotate(-180deg); 
+    filter: hue-rotate(180deg); 
+    opacity: 0; 
+  }
+  to { 
+    transform: scale(1) rotate(0); 
+    filter: hue-rotate(0); 
+    opacity: 1; 
+  }
+}
+
+/* PULSE */
+.pulseTransition {
+  animation: pulseIn 0.5s ease forwards;
+}
+
+@keyframes pulseIn {
+  0% { 
+    transform: scale(0.9); 
+    opacity: 0.5; 
+  }
+  50% { 
+    transform: scale(1.05); 
+    opacity: 0.9; 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* RAINBOW */
+.rainbowTransition {
+  animation: rainbowIn 0.5s ease forwards;
+}
+
+@keyframes rainbowIn {
+  from { 
+    filter: hue-rotate(0deg) saturate(0); 
+    opacity: 0; 
+  }
+  50% { 
+    filter: hue-rotate(180deg) saturate(2); 
+    opacity: 0.8; 
+  }
+  100% { 
+    filter: hue-rotate(360deg) saturate(1); 
+    opacity: 1; 
+  }
+}
+
+/* DISSOLVE */
+.dissolveTransition {
+  animation: dissolveIn 0.5s ease forwards;
+  clip-path: circle(0% at 50% 50%);
+}
+
+@keyframes dissolveIn {
+  from { clip-path: circle(0% at 50% 50%); opacity: 0; }
+  to { clip-path: circle(150% at 50% 50%); opacity: 1; }
+}
+
+/* Остальные стили (контейнер, загрузка, и т.д.) */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+}
+
+/* ========== ПОЛНОЭКРАННЫЙ РЕЖИМ ========== */
+
+/* Когда весь документ в полноэкранном режиме */
+:fullscreen .app,
+:-webkit-full-screen .app,
+:-moz-full-screen .app {
+  width: 100vw;
+  height: 100vh;
+  background: inherit;
+}
+
+:fullscreen .backgroundLayer,
+:-webkit-full-screen .backgroundLayer,
+:-moz-full-screen .backgroundLayer {
+  position: fixed;
+  z-index: 0;
+}
+
+:fullscreen .container,
+:-webkit-full-screen .container,
+:-moz-full-screen .container {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+:fullscreen .topBar,
+:-webkit-full-screen .topBar,
+:-moz-full-screen .topBar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 30px;
+  padding: 5px;
+  backdrop-filter: blur(5px);
+}
+
+:fullscreen .settingsBtn,
+:fullscreen .fullscreenBtn,
+:-webkit-full-screen .settingsBtn,
+:-webkit-full-screen .fullscreenBtn,
+:-moz-full-screen .settingsBtn,
+:-moz-full-screen .fullscreenBtn {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+:fullscreen .topBar:hover .settingsBtn,
+:fullscreen .topBar:hover .fullscreenBtn,
+:-webkit-full-screen .topBar:hover .settingsBtn,
+:-webkit-full-screen .topBar:hover .fullscreenBtn,
+:-moz-full-screen .topBar:hover .settingsBtn,
+:-moz-full-screen .topBar:hover .fullscreenBtn {
+  opacity: 1;
+}
+
+
+/* src/App.module.css - добавляем стили для загрузки */
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.loadingContent {
+  background: rgba(20, 20, 40, 0.9);
+  padding: 30px 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  min-width: 300px;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #667eea;
+  border-right-color: #764ba2;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.loadingBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.loadingProgress {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+  border-radius: 3px;
+}
+
+
+/* ========== АНИМАЦИИ СЛАЙД-ШОУ ========== */
+
+/* Базовый класс для всех анимаций */
+.fade-bg,
+.slide-bg,
+.zoom-bg,
+.blur-bg,
+.flip-bg,
+.rotate-bg,
+.bounce-bg,
+.flash-bg {
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+/* FADE - плавное появление */
+.fade-bg {
+  animation-name: fadeAnimation;
+}
+
+@keyframes fadeAnimation {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* SLIDE - скольжение */
+.slide-bg {
+  animation-name: slideAnimation;
+}
+
+@keyframes slideAnimation {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ZOOM - увеличение */
+.zoom-bg {
+  animation-name: zoomAnimation;
+}
+
+@keyframes zoomAnimation {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* BLUR - размытие */
+.blur-bg {
+  animation-name: blurAnimation;
+}
+
+@keyframes blurAnimation {
+  0% {
+    filter: blur(10px);
+    opacity: 0;
+  }
+  100% {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+/* FLIP - переворот */
+.flip-bg {
+  animation-name: flipAnimation;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@keyframes flipAnimation {
+  0% {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateY(0);
+    opacity: 1;
+  }
+}
+
+/* ROTATE - вращение */
+.rotate-bg {
+  animation-name: rotateAnimation;
+}
+
+@keyframes rotateAnimation {
+  0% {
+    transform: rotate(-180deg) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* BOUNCE - подпрыгивание */
+.bounce-bg {
+  animation-name: bounceAnimation;
+}
+
+@keyframes bounceAnimation {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+/* FLASH - вспышка */
+.flash-bg {
+  animation-name: flashAnimation;
+}
+
+@keyframes flashAnimation {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0.3;
+  }
+}
+
+/* Дополнительные эффекты для более плавной смены */
+
+/* Вариант с затемнением */
+.darken-bg {
+  animation-name: darkenAnimation;
+}
+
+@keyframes darkenAnimation {
+  0% {
+    filter: brightness(0.5);
+    opacity: 0.5;
+  }
+  100% {
+    filter: brightness(1);
+    opacity: 1;
+  }
+}
+
+/* Вариант с выцветанием */
+.desaturate-bg {
+  animation-name: desaturateAnimation;
+}
+
+@keyframes desaturateAnimation {
+  0% {
+    filter: saturate(0);
+    opacity: 0.5;
+  }
+  100% {
+    filter: saturate(1);
+    opacity: 1;
+  }
+}
+
+/* Вариант с размытием по горизонтали */
+.horizontal-blur-bg {
+  animation-name: horizontalBlurAnimation;
+}
+
+@keyframes horizontalBlurAnimation {
+  0% {
+    filter: blur(20px) blur(20px);
+    transform: scaleX(0.8);
+    opacity: 0;
+  }
+  100% {
+    filter: blur(0);
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Вариант с эффектом "шторки" */
+.curtain-bg {
+  animation-name: curtainAnimation;
+  clip-path: inset(0 100% 0 0);
+}
+
+@keyframes curtainAnimation {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Вариант с вращением по оси X */
+.xflip-bg {
+  animation-name: xflipAnimation;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@keyframes xflipAnimation {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}
+
+/* Вариант с вращением по диагонали */
+.diagonal-rotate-bg {
+  animation-name: diagonalRotateAnimation;
+}
+
+@keyframes diagonalRotateAnimation {
+  0% {
+    transform: rotate(45deg) scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Вариант с эффектом "волны" */
+.wave-bg {
+  animation-name: waveAnimation;
+}
+
+@keyframes waveAnimation {
+  0% {
+    transform: skewX(30deg) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: skewX(-10deg) scale(1.05);
+  }
+  100% {
+    transform: skewX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Вариант с эффектом "молнии" */
+.lightning-bg {
+  animation-name: lightningAnimation;
+  animation-duration: 0.3s;
+}
+
+@keyframes lightningAnimation {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  20%, 40%, 60%, 80% {
+    filter: brightness(2);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    filter: brightness(1);
+  }
+}
+
+/* Вариант с эффектом "калейдоскоп" */
+.kaleidoscope-bg {
+  animation-name: kaleidoscopeAnimation;
+}
+
+@keyframes kaleidoscopeAnimation {
+  0% {
+    transform: scale(0.5) rotate(-180deg);
+    filter: hue-rotate(180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    filter: hue-rotate(0);
+    opacity: 1;
+  }
+}
+
+/* Вариант с эффектом "пульсация" */
+.pulse-bg {
+  animation-name: pulseAnimation;
+}
+
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Вариант с эффектом "радуга" */
+.rainbow-bg {
+  animation-name: rainbowAnimation;
+}
+
+@keyframes rainbowAnimation {
+  0% {
+    filter: hue-rotate(0deg) saturate(0);
+    opacity: 0;
+  }
+  50% {
+    filter: hue-rotate(180deg) saturate(2);
+    opacity: 0.8;
+  }
+  100% {
+    filter: hue-rotate(360deg) saturate(1);
+    opacity: 1;
+  }
+}
+
+/* Вариант с эффектом "растворение" */
+.dissolve-bg {
+  animation-name: dissolveAnimation;
+}
+
+@keyframes dissolveAnimation {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0;
+  }
+  100% {
+    clip-path: circle(150% at 50% 50%);
+    opacity: 1;
+  }
+}
+
+/* Поддержка для полноэкранного режима */
+:fullscreen .fade-bg,
+:fullscreen .slide-bg,
+:fullscreen .zoom-bg,
+:fullscreen .blur-bg,
+:fullscreen .flip-bg,
+:fullscreen .rotate-bg,
+:fullscreen .bounce-bg,
+:fullscreen .flash-bg {
+  animation-duration: 0.5s;
+}
+
+/* Оптимизация производительности */
+.fade-bg,
+.slide-bg,
+.zoom-bg,
+.blur-bg,
+.flip-bg,
+.rotate-bg,
+.bounce-bg,
+.flash-bg {
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+  .fade-bg,
+  .slide-bg,
+  .zoom-bg,
+  .blur-bg,
+  .flip-bg,
+  .rotate-bg,
+  .bounce-bg,
+  .flash-bg {
+    animation-duration: 0.3s;
+  }
+}
+
+/* Добавляем в конец файла */
+
+.systemMonitor {
+  margin-top: 20px;
+  width: 100%;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* В полноэкранном режиме */
+:fullscreen .systemMonitor {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Добавляем в конец файла */
+.systemMonitor {
+  margin-top: 15px;
+  width: 100%;
+}

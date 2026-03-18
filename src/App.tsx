@@ -1,12 +1,10 @@
-// src/App.tsx - добавляем SystemMonitor
-
-import React, { useRef, useState, useEffect } from "react";
-import { ClockDisplay } from "./components/Clock/ClockDisplay";
-import { TopBar } from "./components/UI/TopBar";
-import { FullscreenHint } from "./components/UI/FullscreenHint";
-import { SettingsPanel } from "./components/Settings/SettingsPanel";
-import { AnimatedBackground } from "./components/Backgrounds/AnimatedBackground";
-import { SystemMonitor } from "./components/SystemMonitor/SystemMonitor"; // Импортируем
+import React, { useRef, useState } from "react";
+import { ClockDisplay } from "./components/Clock/ClockDisplay/ClockDisplay";
+import { TopBar } from "./components/UI/TopBar/TopBar";
+import { FullscreenHint } from "./components/UI/FullscreenHint/FullscreenHint";
+import { SettingsPanel } from "./components/Settings/SettingsPanel/SettingsPanel";
+import { AnimatedBackground } from "./components/Background/AnimatedBackground/AnimatedBackground";
+import { SystemMonitor } from "./components/Clock/SystemMonitor/SystemMonitor";
 import { useFullscreen } from "./hooks/useFullscreen";
 import { useClock } from "./hooks/useClock";
 import { useSlideshow } from "./hooks/useSlideshow";
@@ -14,99 +12,91 @@ import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useGradientEditor } from "./hooks/useGradientEditor";
 import { useImageStorage } from "./hooks/useImageStorage";
 import { useAnimatedBackground } from "./hooks/useAnimatedBackground";
-import { GRADIENTS } from "./utils/constants";
-import type { GradientKey, CustomGradient } from "./types";
+import { GRADIENTS } from "./utils/constants/gradients";
+import type { GradientKey, CustomGradient, BackgroundType, FolderImage } from "./types/background";
+import type { ClockSettings } from "./types/clock";
+import type { SlideshowState } from "./types/slideshow";
+import type { SystemSettings } from "./types/system";
 import styles from "./App.module.css";
+
+// Сначала объявляем функцию
+const getImageIdByData = (data: string, folderImages: FolderImage[]): number => {
+  const image = folderImages.find(img => img.data === data);
+  return image?.id || 0;
+};
+
+const getBackgroundStyle = (background: string): React.CSSProperties => {
+  if (background.startsWith('linear-gradient') || background.startsWith('radial-gradient')) {
+    return { background };
+  }
+  return {
+    backgroundImage: `url('${background}')`,
+    backgroundAttachment: 'fixed',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  };
+};
 
 function App() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const appRef = useRef<HTMLDivElement>(null);
-  const { isFullscreen, showHint, toggleFullscreen } =
-    useFullscreen(containerRef);
+  const { isFullscreen, showHint, toggleFullscreen } = useFullscreen(containerRef as React.RefObject<HTMLElement>);
 
-  // Clock state
   const clock = useClock();
-
-  // Settings UI state
+  const animatedBg = useAnimatedBackground();
+  const { customGradients, getGradientStyle } = useGradientEditor();
+  const { folderImages, folderPath, isLoading, loadingProgress, handleFolderSelect } = useImageStorage();
+  
   const [showSettings, setShowSettings] = useState(false);
-  const [activeTab, setActiveTab] = useState("background");
-
-  // System monitor state (НОВОЕ)
-  const [showSystemMonitor, setShowSystemMonitor] = useLocalStorage(
-    "showSystemMonitor",
-    false,
-  );
-  const [monitorPosition, setMonitorPosition] = useLocalStorage(
-    "monitorPosition",
-    "bottom-left",
-  );
-
-  // Добавляем новое состояние для размера монитора
-  const [monitorSize, setMonitorSize] = useLocalStorage<
-    "small" | "medium" | "large"
-  >("monitorSize", "medium");
-
-  // Background state
-  const [backgroundType, setBackgroundType] = useLocalStorage<
-    "gradient" | "folder" | "custom" | "animated"
-  >("backgroundType", "gradient");
-  const [backgroundValue, setBackgroundValue] = useLocalStorage<string>(
-    "backgroundValue",
-    "gradient1",
-  );
-
-  // Для двойного буфера анимации
+  const [activeTab, setActiveTab] = useState('background');
+  const [backgroundType, setBackgroundType] = useLocalStorage<BackgroundType>('backgroundType', 'gradient');
+  const [backgroundValue, setBackgroundValue] = useLocalStorage<string>('backgroundValue', 'gradient1');
+  const [showSystemMonitor, setShowSystemMonitor] = useLocalStorage('showSystemMonitor', false);
+  const [monitorSize, setMonitorSize] = useLocalStorage<'small' | 'medium' | 'large'>('monitorSize', 'medium');
+  
   const [currentBackground, setCurrentBackground] = useState<string>(() => {
-    if (backgroundType === "gradient") {
+    if (backgroundType === 'gradient') {
       return GRADIENTS[backgroundValue as GradientKey];
-    } else if (backgroundType === "custom") {
-      return GRADIENTS.gradient1;
     }
     return GRADIENTS.gradient1;
   });
 
   const [nextBackground, setNextBackground] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [transitionEffect, setTransitionEffect] = useState("");
+  const [transitionEffect, setTransitionEffect] = useState('');
 
-  // Custom gradients
-  const { customGradients, getGradientStyle } = useGradientEditor();
+  React.useEffect(() => {
+    if (backgroundType === 'animated') return;
 
-  // Animated backgrounds
-  const animatedBg = useAnimatedBackground();
-
-  // Image storage with IndexedDB
-  const {
-    folderImages,
-    folderPath,
-    isLoading,
-    loadingProgress,
-    handleFolderSelect,
-  } = useImageStorage();
-
-  // Slideshow
-  const slideshow = useSlideshow(
-    folderImages.filter((img) => img.data),
-    (imageData: string, effect?: string) => {
-      // Не запускаем анимацию перехода, если включен анимированный фон
-      if (backgroundType === "animated") {
-        return;
+    if (backgroundType === 'gradient') {
+      setCurrentBackground(GRADIENTS[backgroundValue as GradientKey]);
+    } else if (backgroundType === 'custom') {
+      const gradient = customGradients.find(g => g.id === backgroundValue);
+      if (gradient) {
+        setCurrentBackground(getGradientStyle(gradient));
       }
+    } else if (backgroundType === 'folder') {
+      const image = folderImages.find(img => img.id.toString() === backgroundValue);
+      if (image?.data) {
+        setCurrentBackground(image.data);
+      } else if (folderImages.length > 0 && !backgroundValue) {
+        setCurrentBackground(folderImages[0].data);
+      }
+    }
+  }, [backgroundType, backgroundValue, folderImages, customGradients, getGradientStyle]);
 
+  const slideshow = useSlideshow(
+    folderImages.filter(img => img.data),
+    (imageData: string, effect?: string) => {
+      if (backgroundType === 'animated') return;
       if (effect) {
         startTransition(imageData, effect);
       } else {
-        setBackgroundType("folder");
-        setBackgroundValue(getImageIdByData(imageData).toString());
-        setCurrentBackground(imageData);
+        setBackgroundType('folder');
+        setBackgroundValue(getImageIdByData(imageData, folderImages).toString());
       }
-    },
+    }
   );
-
-  const getImageIdByData = (data: string): number => {
-    const image = folderImages.find((img) => img.data === data);
-    return image?.id || 0;
-  };
 
   const startTransition = (newBackground: string, effect: string) => {
     setNextBackground(newBackground);
@@ -117,174 +107,75 @@ function App() {
       setCurrentBackground(newBackground);
       setNextBackground(null);
       setIsTransitioning(false);
-      setTransitionEffect("");
-
-      const image = folderImages.find((img) => img.data === newBackground);
-      if (image) {
-        setBackgroundType("folder");
-        setBackgroundValue(image.id.toString());
-      }
+      setTransitionEffect('');
     }, 500);
   };
 
-  // Обновление текущего фона при изменении настроек
-  useEffect(() => {
-    if (backgroundType === "animated") {
-      // Для анимированного фона не нужно устанавливать currentBackground
-      return;
-    }
-
-    if (backgroundType === "gradient") {
-      setCurrentBackground(GRADIENTS[backgroundValue as GradientKey]);
-    } else if (backgroundType === "custom") {
-      const gradient = customGradients.find((g) => g.id === backgroundValue);
-      if (gradient) {
-        setCurrentBackground(getGradientStyle(gradient));
-      }
-    } else if (backgroundType === "folder") {
-      const image = folderImages.find(
-        (img) => img.id.toString() === backgroundValue,
-      );
-      if (image?.data) {
-        setCurrentBackground(image.data);
-      } else if (folderImages.length > 0 && !backgroundValue) {
-        setBackgroundValue(folderImages[0].id.toString());
-        setCurrentBackground(folderImages[0].data);
-      }
-    }
-  }, [
-    backgroundType,
-    backgroundValue,
-    folderImages,
-    customGradients,
-    getGradientStyle,
-  ]);
-
   const handleGradientSelect = (gradient: GradientKey) => {
-    setBackgroundType("gradient");
+    setBackgroundType('gradient');
     setBackgroundValue(gradient);
-    setCurrentBackground(GRADIENTS[gradient]);
-    slideshow.stopSlideshow();
-  };
-
-  const handleAnimatedSelect = () => {
-    setBackgroundType("animated");
     slideshow.stopSlideshow();
   };
 
   const handleCustomGradientSelect = (gradient: CustomGradient) => {
-    setBackgroundType("custom");
+    setBackgroundType('custom');
     setBackgroundValue(gradient.id);
-    setCurrentBackground(getGradientStyle(gradient));
     slideshow.stopSlideshow();
   };
 
   const handleImageSelect = (image: FolderImage) => {
     if (image?.data) {
-      setBackgroundType("folder");
+      setBackgroundType('folder');
       setBackgroundValue(image.id.toString());
-      setCurrentBackground(image.data);
       slideshow.stopSlideshow();
     }
   };
 
-  const getBackgroundStyle = (background: string): React.CSSProperties => {
-    return {
-      backgroundImage: `url('${background}')`,
-      backgroundAttachment: "fixed",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    };
+  const handleAnimatedSelect = () => {
+    setBackgroundType('animated');
+    slideshow.stopSlideshow();
   };
 
-  const isGradient = (bg: string): boolean => {
-    return bg.startsWith("linear-gradient") || bg.startsWith("radial-gradient");
-  };
+  const shouldShowBackgroundLayers = () => backgroundType !== 'animated';
 
-  // Определяем, показывать ли слои фона
-  const shouldShowBackgroundLayers = () => {
-    return backgroundType !== "animated";
-  };
-
-  // Функция для определения позиции монитора
-  const getMonitorStyle = (): React.CSSProperties => {
-    const styles: React.CSSProperties = {
-      position: "fixed",
-      zIndex: 100,
-    };
-
-    switch (monitorPosition) {
-      case "top-left":
-        styles.top = "80px";
-        styles.left = "20px";
-        break;
-      case "top-right":
-        styles.top = "80px";
-        styles.right = "20px";
-        break;
-      case "bottom-right":
-        styles.bottom = "20px";
-        styles.right = "20px";
-        break;
-      default: // bottom-left
-        styles.bottom = "20px";
-        styles.left = "20px";
-    }
-
-    return styles;
-  };
+  // Компонент LoadingOverlay прямо в файле
+  const LoadingOverlay: React.FC<{ progress: number; isRestoring?: boolean }> = ({ progress, isRestoring }) => (
+    <div className={styles.loadingOverlay}>
+      <div className={styles.loadingContent}>
+        <div className={styles.loadingSpinner} />
+        <div className={styles.loadingText}>
+          {isRestoring ? 'Восстановление слайд-шоу...' : `Загрузка изображений... ${progress}%`}
+        </div>
+        {!isRestoring && (
+          <div className={styles.loadingBar}>
+            <div className={styles.loadingProgress} style={{ width: `${progress}%` }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
-    <div ref={appRef} className={styles.app}>
-      {/* Анимированный фон */}
-      {backgroundType === "animated" && (
-        <AnimatedBackground settings={animatedBg.settings} />
-      )}
+    <div className={styles.app}>
+      {backgroundType === 'animated' && <AnimatedBackground settings={animatedBg.settings} />}
 
-      {/* Слои фона */}
       {shouldShowBackgroundLayers() && (
         <>
           <div
-            className={`${styles.backgroundLayer} ${isTransitioning && !nextBackground ? styles.hidden : ""}`}
-            style={
-              backgroundType === "gradient" || backgroundType === "custom"
-                ? { background: currentBackground }
-                : getBackgroundStyle(currentBackground)
-            }
+            className={`${styles.backgroundLayer} ${isTransitioning && !nextBackground ? styles.hidden : ''}`}
+            style={getBackgroundStyle(currentBackground)}
           />
           {nextBackground && (
             <div
               className={`${styles.backgroundLayer} ${styles[`${transitionEffect}Transition`]}`}
-              style={
-                isGradient(nextBackground)
-                  ? { background: nextBackground }
-                  : getBackgroundStyle(nextBackground)
-              }
+              style={getBackgroundStyle(nextBackground)}
             />
           )}
         </>
       )}
 
       {(isLoading || slideshow.isRestoring) && (
-        <div className={styles.loadingOverlay}>
-          <div className={styles.loadingContent}>
-            <div className={styles.loadingSpinner}></div>
-            <div className={styles.loadingText}>
-              {isLoading
-                ? `Загрузка изображений... ${loadingProgress}%`
-                : "Восстановление слайд-шоу..."}
-            </div>
-            {isLoading && (
-              <div className={styles.loadingBar}>
-                <div
-                  className={styles.loadingProgress}
-                  style={{ width: `${loadingProgress}%` }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
+        <LoadingOverlay progress={loadingProgress} isRestoring={slideshow.isRestoring} />
       )}
 
       <div className={styles.container} ref={containerRef}>
@@ -293,61 +184,64 @@ function App() {
           onFullscreenClick={toggleFullscreen}
           isFullscreen={isFullscreen}
         />
+
         <SettingsPanel
           isOpen={showSettings}
           activeTab={activeTab}
           onClose={() => setShowSettings(false)}
           onTabChange={setActiveTab}
-          // Background props
-          backgroundType={backgroundType}
-          currentBackground={
-            backgroundType === "gradient" ? backgroundValue : currentBackground
-          }
-          folderImages={folderImages}
-          folderPath={folderPath}
-          onGradientSelect={handleGradientSelect}
-          onCustomGradientSelect={handleCustomGradientSelect}
-          onFolderSelect={handleFolderSelect}
-          onImageSelect={handleImageSelect}
-          // Animated background props
-          animatedSettings={animatedBg.settings}
-          onAnimatedSettingsChange={animatedBg.updateSettings}
-          onAnimatedSelect={handleAnimatedSelect}
-          // Clock props
-          clockSize={clock.clockSize}
-          clockColor={clock.clockColor}
-          glowIntensity={clock.glowIntensity}
-          borderOpacity={clock.borderOpacity}
-          fontFamily={clock.fontFamily}
-          onClockSizeChange={clock.setClockSize}
-          onClockColorChange={clock.setClockColor}
-          onGlowIntensityChange={clock.setGlowIntensity}
-          onBorderOpacityChange={clock.setBorderOpacity}
-          onFontFamilyChange={clock.setFontFamily}
-          // Slideshow props
-          slideshowActive={slideshow.isActive}
-          slideshowEffect={slideshow.effect}
-          slideshowInterval={slideshow.interval}
-          randomEffect={slideshow.randomEffect}
-          randomInterval={slideshow.randomInterval}
-          randomIntervalRange={slideshow.randomIntervalRange}
-          shuffleImages={slideshow.shuffleImages}
-          onEffectChange={slideshow.setEffect}
-          onIntervalChange={slideshow.setInterval}
-          onRandomEffectChange={slideshow.setRandomEffect}
-          onRandomIntervalChange={slideshow.setRandomInterval}
-          onRandomIntervalRangeChange={slideshow.setRandomIntervalRange}
-          onShuffleImagesChange={slideshow.setShuffleImages}
-          onStartSlideshow={slideshow.startSlideshow}
-          onStopSlideshow={slideshow.stopSlideshow}
-          // System monitor props (НОВЫЕ)
-          showSystemMonitor={showSystemMonitor}
-          onShowSystemMonitorChange={setShowSystemMonitor}
-          monitorPosition={monitorPosition}
-          onMonitorPositionChange={setMonitorPosition}
-          monitorSize={monitorSize} // Добавляем
-          onMonitorSizeChange={setMonitorSize} // Добавляем
+          background={{
+            type: backgroundType,
+            currentValue: backgroundType === 'gradient' ? backgroundValue : currentBackground,
+            folderImages,
+            folderPath,
+            onGradientSelect: handleGradientSelect,
+            onCustomGradientSelect: handleCustomGradientSelect,
+            onFolderSelect: handleFolderSelect,
+            onImageSelect: handleImageSelect,
+          }}
+          clock={{
+            size: clock.clockSize,
+            color: clock.clockColor,
+            glowIntensity: clock.glowIntensity,
+            borderOpacity: clock.borderOpacity,
+            fontFamily: clock.fontFamily,
+            onSizeChange: clock.setClockSize,
+            onColorChange: clock.setClockColor,
+            onGlowIntensityChange: clock.setGlowIntensity,
+            onBorderOpacityChange: clock.setBorderOpacity,
+            onFontFamilyChange: clock.setFontFamily,
+          }}
+          slideshow={{
+            isActive: slideshow.isActive,
+            effect: slideshow.effect,
+            interval: slideshow.interval,
+            randomEffect: slideshow.randomEffect,
+            randomInterval: slideshow.randomInterval,
+            randomIntervalRange: slideshow.randomIntervalRange,
+            shuffleImages: slideshow.shuffleImages,
+            onEffectChange: slideshow.setEffect,
+            onIntervalChange: slideshow.setInterval,
+            onRandomEffectChange: slideshow.setRandomEffect,
+            onRandomIntervalChange: slideshow.setRandomInterval,
+            onRandomIntervalRangeChange: slideshow.setRandomIntervalRange,
+            onShuffleImagesChange: slideshow.setShuffleImages,
+            onStart: slideshow.startSlideshow,
+            onStop: slideshow.stopSlideshow,
+          }}
+          system={{
+            showMonitor: showSystemMonitor,
+            monitorSize,
+            onShowMonitorChange: setShowSystemMonitor,
+            onMonitorSizeChange: setMonitorSize,
+          }}
+          animated={{
+            settings: animatedBg.settings,
+            onSettingsChange: animatedBg.updateSettings,
+            onSelect: handleAnimatedSelect,
+          }}
         />
+
         <ClockDisplay
           time={clock.time}
           clockStyle={clock.clockStyle}
@@ -357,7 +251,6 @@ function App() {
 
         {showSystemMonitor && (
           <SystemMonitor
-            className={styles.systemMonitor}
             fontFamily={clock.fontFamily}
             textColor={clock.clockColor}
             glowIntensity={parseInt(clock.glowIntensity)}

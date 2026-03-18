@@ -1,0 +1,114 @@
+.tabContent {
+  display: block;
+}
+
+.systemSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.systemSettings h4 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.settingItem.checkbox {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.settingItem.checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.sizePresets {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sizePreset {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.sizePreset:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.sizePreset.active {
+  background: linear-gradient(135deg, #00b4db, #0083b0);
+  border-color: transparent;
+}
+
+.infoBox {
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.infoBox h5 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.infoBox p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.metricList {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.metricList li {
+  padding: 6px 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metricList li:last-child {
+  border-bottom: none;
+}
+
+.note {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.note strong {
+  color: #ffd700;
+}
